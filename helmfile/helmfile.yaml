@@ -1,0 +1,48 @@
+---
+# this is a generic helmfile that includes everything and builds environments.
+# 
+# this is the logic that includes all the different files
+helmDefaults:
+  skipDeps: false
+commonLabels:
+  # label all ressources
+  createdBy: clusterfilectl
+repositories: []
+# this includes values that are important for helmfile. content of these files does not end up within in the helm charts
+values:
+  - base: {}
+  - env:
+      APP_ENV: "undef"
+  - releases:
+    - nginx
+  - nginx:
+      name: nginx
+      releaseName: nginx
+      chart:
+        name: bitnami/nginx
+        version: 8.9.1
+      installed: 'true' # mind the quotation marks. otherwise value is treated as bool during parsing
+      version: 1.19.10
+      namespace: nginx
+
+
+# releases defines the apps that are included. this snippet takes 
+# all the entries of the releases array. the release array might be overwritten in the loaded environment
+releases:
+  {{- $global := . -}}
+  {{- range $release := $global.Values.releases }}
+  {{- $cnf := index $global.Values $release}}
+  - name: {{ $cnf.releaseName }}
+    namespace: {{ $global.Values.base | getOrNil "namespaceOverwrite" | default $cnf.namespace }}
+    chart: {{ $cnf.chart.name }}
+    version: {{ $cnf.chart.version }}
+    installed: {{ $global.Values.base | getOrNil "installedOverwrite" | default $cnf.installed }}
+    values:
+    - nameOverride: {{ $cnf.releaseName }}
+    {{ if $cnf | getOrNil "image" }}
+    - image: {{ $cnf.image }}
+    {{ end }}
+    {{ if $cnf | getOrNil "version" }}
+    - version: {{ $cnf.version }}
+    {{ end }}
+  {{- end }}
