@@ -1,0 +1,20 @@
+name: buildah
+on: [push]
+
+jobs:
+
+  tests:
+    #runs-on: ubuntu-latest
+    #steps:
+    #  - uses: actions/checkout@v1
+    #  - name: go test
+    #    run: go test .
+
+  go-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: go build
+        run: go build -o ./bin/clusterfilectl -ldflags "-X main.GitCommit=${{ github.sha }}" .
+      - name: run executable
+        run: ./bin/clusterfilectl --help
