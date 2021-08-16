@@ -31,10 +31,12 @@ func main() {
 	}
 
 	app := &cli.App{
-		Name:     "clusterfilectl",
-		Usage:    "Control the content of multiple k8s cluster via helmfile.",
-		Version:  "AppVersion",
-		Commands: []*cli.Command{commands.Destroy(&cfg), commands.Sync(&cfg), commands.Diff(&cfg), commands.Dump(&cfg), commands.Preflight(&cfg), commands.Template(&cfg), commands.Lint(&cfg), commands.Build(&cfg)},
+		Name:    "clusterfilectl",
+		Usage:   "Control the content of multiple k8s cluster via helmfile.",
+		Version: "AppVersion",
+		Commands: []*cli.Command{commands.Status(&cfg), commands.Destroy(&cfg), commands.Sync(&cfg),
+			commands.Diff(&cfg), commands.Dump(&cfg), commands.Preflight(&cfg),
+			commands.Template(&cfg), commands.Lint(&cfg), commands.Build(&cfg)},
 		Flags: []cli.Flag{
 			&cli.StringFlag{
 				Name:        "clusterfile",
@@ -59,6 +61,12 @@ func main() {
 				Value:       ".rendered",
 				Usage:       "Output-Dir to write to",
 				Destination: &cfg.OutputDir,
+			},
+			&cli.StringFlag{
+				Name:        "kube-context",
+				Value:       "",
+				Usage:       "Overwrite kubernetes context. may be useful for ci/cd. (not implemented yet)", // TODO: implement me
+				Destination: &cfg.OverwrittenKubeContext,
 			},
 			&cli.BoolFlag{
 				Name:        "ignore",

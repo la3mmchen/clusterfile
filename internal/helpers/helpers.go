@@ -21,6 +21,10 @@ import (
 	"k8s.io/client-go/util/homedir"
 )
 
+func DiffEnv(cfg *types.Configuration, envfile string) (int, error) {
+	return RunWithRc(cfg.HelmfileExecutable, []string{"--file", envfile, "diff", "--detailed-exitcode"}, true)
+}
+
 func PreloadCfg(cfg *types.Configuration) error {
 
 	// parse clusterfile
@@ -51,6 +55,8 @@ func GetActiveKubeContext() (string, error) {
 
 	parsedContext := strings.Split(strings.TrimSuffix(stdout.String(), "\n"), "@")
 
+	fmt.Printf("Parsed context from your env: [%v] \n", parsedContext[len(parsedContext)-1])
+
 	return parsedContext[len(parsedContext)-1], nil
 }
 
@@ -66,10 +72,12 @@ func CheckExecutable(cmd string) bool {
 
 }
 
-func RunWithRc(prog string, args []string) (int, error) {
+func RunWithRc(prog string, args []string, silent bool) (int, error) {
 	cmd := exec.Command(prog, args...)
 
-	fmt.Printf("Executing: [%v] \n", cmd)
+	if !silent {
+		fmt.Printf("Executing: [%v] \n", cmd)
+	}
 
 	err := cmd.Run()
 

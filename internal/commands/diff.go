@@ -22,7 +22,7 @@ func Diff(cfg *types.Configuration) *cli.Command {
 		}
 
 		for i := range cfg.ActiveCluster.Envs {
-			rc, err := helpers.RunWithRc(cfg.HelmfileExecutable, []string{"--file", cfg.ActiveCluster.Envs[i].Location, "diff", "--detailed-exitcode"})
+			rc, err := helpers.RunWithRc(cfg.HelmfileExecutable, []string{"--file", cfg.ActiveCluster.Envs[i].Location, "diff", "--detailed-exitcode"}, false)
 			if err != nil {
 				return err
 			}

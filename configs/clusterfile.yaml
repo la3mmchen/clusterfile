@@ -4,10 +4,10 @@ clusters:
   - name: dev
     context: kubernetes
     envs:
+      - name: addons
+        location: helmfile/addons.yaml
       - name: web-apps
         location: helmfile/web-apps.yaml
-      - name: backend
-        location: helmfile/backend.yaml
   - name: test
     context: kind-lokalhorst
     envs: []

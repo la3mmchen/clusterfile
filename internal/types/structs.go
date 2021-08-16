@@ -2,18 +2,25 @@ package types
 
 // Configuration acts as central resource to save everything
 type Configuration struct {
-	Debug               string
-	ClusterfileLocation string
-	Clusterfile         Clusterfile
-	ActiveCluster       Cluster
-	ActiveContext       string
-	Helmfile            string
-	HelmfileExecutable  string
-	OutputDir           string
-	PreflightConfig     Preflight
-	TemplateConfig      Template
-	BuildConfig         Build
-	Ignore              bool
+	Debug                  string
+	ClusterfileLocation    string
+	Clusterfile            Clusterfile
+	ActiveCluster          Cluster
+	ActiveContext          string
+	OverwrittenKubeContext string
+	Helmfile               string
+	HelmfileExecutable     string
+	OutputDir              string
+	PreflightConfig        Preflight
+	TemplateConfig         Template
+	BuildConfig            Build
+	StatusConfig           Status
+	Ignore                 bool
+}
+
+// Status represents options for the cli subcommand
+type Status struct {
+	Offline bool
 }
 
 // Build represents options for the cli subcommand

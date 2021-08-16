@@ -27,7 +27,5 @@ run-help:
 run-func:
 	@./${EXECUTABLE} preflight --offline
 	@echo "\n____________________________"
-	@./${EXECUTABLE} lint
-	@echo "\n____________________________"
-	@./${EXECUTABLE} dump
+	@./${EXECUTABLE} status --offline
 	@echo "\n____________________________"
