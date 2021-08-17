@@ -7,7 +7,6 @@ import (
 	"github.com/urfave/cli/v2"
 
 	"github.com/la3mmchen/clusterfile/internal/commands"
-	"github.com/la3mmchen/clusterfile/internal/helpers"
 	"github.com/la3mmchen/clusterfile/internal/types"
 )
 
@@ -19,15 +18,8 @@ var (
 )
 
 func main() {
-	activeContext, err := helpers.GetActiveKubeContext()
-
-	if err != nil {
-		fmt.Printf("Error loading kube context: [%v] \n", err)
-		os.Exit(1)
-	}
 	var cfg = types.Configuration{
-		Debug:         "true",
-		ActiveContext: activeContext,
+		Debug: "true",
 	}
 
 	app := &cli.App{

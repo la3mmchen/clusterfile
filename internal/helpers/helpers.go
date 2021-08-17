@@ -26,9 +26,16 @@ func DiffEnv(cfg *types.Configuration, envfile string) (int, error) {
 }
 
 func PreloadCfg(cfg *types.Configuration) error {
+	var err error
+
+	cfg.ActiveContext, err = GetActiveKubeContext()
+
+	if err != nil {
+		fmt.Printf("Error loading kube context: [%v] \n", err)
+		return err
+	}
 
 	// parse clusterfile
-	var err error
 	cfg.Clusterfile, err = ParseClusterfile(cfg.ClusterfileLocation)
 	if err != nil {
 		return err
