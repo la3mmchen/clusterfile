@@ -4,18 +4,30 @@ on: [push]
 jobs:
 
   tests:
+    name: tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
+      - name: Setup Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: ‘1.16.0’
       - name: load
         run: go mod vendor
       - name: go test
         run: go test .
 
   go-build:
+    name: build
+    needs:
+      - tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
+      - name: Setup Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: ‘1.16.0’
       - name: go build
         run: go build -o ./bin/clusterfilectl -ldflags "-X main.GitCommit=${{ github.sha }}" .
       - name: run executable
