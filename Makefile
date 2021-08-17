@@ -7,7 +7,7 @@ PROJECT_NAME := $(shell basename "$$PWD")
 .DEFAULT_GOAL := default
 
 test:
-	echo "${PROJECT_NAME}"
+	@go test -v
 
 .PHONY: default
 default: build run-help run-func

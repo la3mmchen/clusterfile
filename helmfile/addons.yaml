@@ -9,7 +9,7 @@ values:
   - base: {}
   - releases.d/*/release.yaml # includes the releases configs.
   - releases:
-    - flannel
+    - calico
 
 # releases defines the apps that are included. this snippet takes 
 # all the entries of the releases array. the release array might be overwritten in the loaded environment

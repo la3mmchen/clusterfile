@@ -1,8 +1,15 @@
 package types
 
+import "github.com/urfave/cli/v2"
+
 // Configuration acts as central resource to save everything
 type Configuration struct {
+	AppName                string
+	AppVersion             string
+	AppUsage               string
 	Debug                  string
+	SkipFlagParsing        bool
+	AdditionalFlags        []cli.Flag
 	ClusterfileLocation    string
 	Clusterfile            Clusterfile
 	ActiveCluster          Cluster

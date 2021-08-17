@@ -4,8 +4,8 @@ clusters:
   - name: dev
     context: kubernetes
     envs:
-      - name: addons
-        location: helmfile/addons.yaml
+      #- name: addons
+      #  location: helmfile/addons.yaml
       - name: web-apps
         location: helmfile/web-apps.yaml
   - name: test

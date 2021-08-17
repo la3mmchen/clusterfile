@@ -15,8 +15,9 @@ import (
 
 func Build(cfg *types.Configuration) *cli.Command {
 	cmd := cli.Command{
-		Name:  "build",
-		Usage: "generate a helmfile state",
+		Name:            "build",
+		Usage:           "generate a helmfile state",
+		SkipFlagParsing: cfg.SkipFlagParsing,
 	}
 
 	cmd.Flags = []cli.Flag{

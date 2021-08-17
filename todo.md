@@ -1,7 +1,7 @@
 # todos
 
 -  [ ]   envs
--  [ ]   sync (--env=<kn> ...)
+-  [x]   sync (--env=<kn> ...)
 -  [ ]   list (--env=<kn> ...)
 -  [ ]   status (--env=<kn> ...)
 -  [ ]   destroy (--env=<kn> ...)
@@ -15,3 +15,4 @@
 -  [ ]   secrets encrypt [secrets-options]
 -  [ ]   load helmfile from repo
 -  [ ]   - `--set externalZone=%s"`
+-  [ ]   env selector
