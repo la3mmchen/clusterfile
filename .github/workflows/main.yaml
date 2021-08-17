@@ -9,10 +9,14 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - uses: actions/setup-go@v2
+        with:
+          go-version: '1.16.5'
       - name: setup env
         run: |
           go version
+          echo "___"
           go mod vendor
+          echo "___"
           go mod verify
       - name: go test
         run: go test .
@@ -28,7 +32,9 @@ jobs:
       - name: setup env
         run: |
           go version
+          echo "___"
           go mod vendor
+          echo "___"
           go mod verify
       - name: build binary
         run: go build -o ./bin/clusterfilectl -ldflags "-X main.GitCommit=${{ github.sha }}" .
