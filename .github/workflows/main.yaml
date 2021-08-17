@@ -19,7 +19,7 @@ jobs:
           echo "___"
           go mod verify
       - name: go test
-        run: go test .
+        run: go test -v .
 
   go-build:
     name: build
