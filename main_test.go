@@ -6,29 +6,13 @@ import (
 	"testing"
 
 	"github.com/la3mmchen/clusterfile/internal/commands"
-	"github.com/la3mmchen/clusterfile/internal/types"
+	"github.com/la3mmchen/clusterfile/internal/helpers"
 	"github.com/urfave/cli/v2"
 )
 
 func bootstrapTestApp() *cli.App {
 	// construct an app for testing purposes
-	var cfg = types.Configuration{
-		AppName:         "test0r",
-		AppVersion:      "1234",
-		AppUsage:        "Control the content of multiple k8s cluster via helmfile.",
-		SkipFlagParsing: true,
-		AdditionalFlags: []cli.Flag{
-			&cli.StringFlag{
-				Name: "test.testlogfile",
-			},
-			&cli.StringFlag{
-				Name: "test.paniconexit0",
-			},
-			&cli.StringFlag{
-				Name: "test.v",
-			},
-		},
-	}
+	cfg := helpers.GetTestCfg()
 
 	return commands.CreateApp(&cfg)
 }
@@ -63,6 +47,18 @@ func TestSubcmdDump(t *testing.T) {
 
 	args := os.Args[0:1]
 	args = append(args, "dump")
+
+	if err := app.Run(args); err != nil {
+		fmt.Printf("Error: %v \n", err)
+		os.Exit(1)
+	}
+}
+
+func TestSubcmdPreflight(t *testing.T) {
+	app := bootstrapTestApp()
+
+	args := os.Args[0:1]
+	args = append(args, "preflight", "--offline")
 
 	if err := app.Run(args); err != nil {
 		fmt.Printf("Error: %v \n", err)

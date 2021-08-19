@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/la3mmchen/clusterfile/internal/commands"
+	"github.com/la3mmchen/clusterfile/internal/helpers"
 	"github.com/la3mmchen/clusterfile/internal/types"
 )
 
@@ -16,10 +17,12 @@ var (
 )
 
 func main() {
+
 	var cfg = types.Configuration{
 		AppName:         "clusterfilectl",
 		AppUsage:        "Control the content of multiple k8s cluster via helmfile.",
 		AppVersion:      AppVersion,
+		ProjectPath:     helpers.GetProjectPath(),
 		SkipFlagParsing: false,
 	}
 

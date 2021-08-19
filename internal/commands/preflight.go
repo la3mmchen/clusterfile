@@ -3,6 +3,7 @@ package commands
 import (
 	"errors"
 	"fmt"
+	"path/filepath"
 
 	"github.com/la3mmchen/clusterfile/internal/helpers"
 	"github.com/la3mmchen/clusterfile/internal/types"
@@ -41,7 +42,7 @@ func Preflight(cfg *types.Configuration) *cli.Command {
 
 		// parse clusterfile
 		fmt.Printf("%schecking %s.", prefixText, cfg.ClusterfileLocation)
-		_, err := helpers.ParseClusterfile(cfg.ClusterfileLocation)
+		_, err := helpers.ParseClusterfile(filepath.Join(cfg.ProjectPath, cfg.ClusterfileLocation))
 		if err != nil {
 			fmt.Printf(err.Error())
 			return err

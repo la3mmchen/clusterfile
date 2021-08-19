@@ -10,6 +10,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"runtime"
 	"strconv"
 	"strings"
 
@@ -21,10 +22,19 @@ import (
 	"k8s.io/client-go/util/homedir"
 )
 
+// GetProjectPath return root path of the project. might be worth to refacotring into using contstructor pattern
+// TODO: might be cool to add error handling
+func GetProjectPath() string {
+	_, b, _, _ := runtime.Caller(0)
+	path := filepath.Join(filepath.Dir(b), "../..") // feels hacky but works
+	return path
+}
+
 func DiffEnv(cfg *types.Configuration, envfile string) (int, error) {
 	return RunWithRc(cfg.HelmfileExecutable, []string{"--file", envfile, "diff", "--detailed-exitcode"}, true)
 }
 
+// PreloadCfg create parsed content in global cfg
 func PreloadCfg(cfg *types.Configuration) error {
 	var err error
 
@@ -36,7 +46,7 @@ func PreloadCfg(cfg *types.Configuration) error {
 	}
 
 	// parse clusterfile
-	cfg.Clusterfile, err = ParseClusterfile(cfg.ClusterfileLocation)
+	cfg.Clusterfile, err = ParseClusterfile(filepath.Join(cfg.ProjectPath, cfg.ClusterfileLocation))
 	if err != nil {
 		return err
 	}
@@ -155,7 +165,7 @@ func SetActiveCluster(cfg *types.Configuration) bool {
 func ValidateEnvHelmfile(cfg *types.Configuration, ignore bool) error {
 
 	for i := range cfg.ActiveCluster.Envs {
-		if _, err := os.Stat(cfg.ActiveCluster.Envs[i].Location); errors.Is(err, fs.ErrNotExist) {
+		if _, err := os.Stat(filepath.Join(cfg.ProjectPath, cfg.ActiveCluster.Envs[i].Location)); errors.Is(err, fs.ErrNotExist) {
 			if ignore {
 				cfg.ActiveCluster.Envs = removeFromSliceByIndex(cfg.ActiveCluster.Envs, i)
 			} else { // only return if we do not ignore the error
