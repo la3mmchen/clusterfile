@@ -33,8 +33,8 @@ func CreateApp(cfg *types.Configuration) *cli.App {
 		},
 		&cli.StringFlag{
 			Name:        "kube-context",
-			Value:       "",
-			Usage:       "Overwrite kubernetes context. may be useful for ci/cd. (not implemented yet)", // TODO: implement me
+			Value:       cfg.OverwrittenKubeContext,
+			Usage:       "Overwrite kubernetes context. may be useful for ci/cd.)", // TODO: implement me
 			Destination: &cfg.OverwrittenKubeContext,
 		},
 		&cli.BoolFlag{

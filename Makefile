@@ -6,8 +6,7 @@ PROJECT_NAME := $(shell basename "$$PWD")
 
 .DEFAULT_GOAL := default
 
-test:
-	@go test -v
+tests: unit-tests app-tests
 
 .PHONY: default
 default: build run-help run-func
@@ -28,4 +27,16 @@ run-func:
 	@./${EXECUTABLE} preflight --offline
 	@echo "\n____________________________"
 	@./${EXECUTABLE} status --offline
+	@echo "\n____________________________\n"
+
+.PHONY: unit-tests
+unit-tests:
+	@go test -cover -failfast -short "./.../types"
+	@echo "\n____________________________"
+	@go test -cover -failfast -short "./.../app"
+	@echo "\n____________________________"
+
+.PHONY: app-tests
+app-tests:
+	@go test -cover -failfast -short "."
 	@echo "\n____________________________"

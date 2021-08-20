@@ -26,13 +26,12 @@ func Preflight(cfg *types.Configuration) *cli.Command {
 	}
 
 	cmd.Action = func(c *cli.Context) error {
-
 		var prefixText = "Preflight check: "
 
 		// check kubeconfig
 		if !cfg.PreflightConfig.Offline {
-			fmt.Printf("%schecking %s \n", prefixText, cfg.ClusterfileLocation)
-			err := CheckKubeConfig()
+			fmt.Printf("%schecking kubernetes config and connect to cluster. \n", prefixText)
+			err := CheckKubeConfig(cfg)
 			if err != nil {
 				return err
 			}
@@ -43,7 +42,7 @@ func Preflight(cfg *types.Configuration) *cli.Command {
 		fmt.Printf("%schecking %s.", prefixText, cfg.ClusterfileLocation)
 		_, err := ParseClusterfile(filepath.Join(cfg.ProjectPath, cfg.ClusterfileLocation))
 		if err != nil {
-			fmt.Printf(err.Error())
+			fmt.Printf("%v", err.Error())
 			return err
 		}
 		fmt.Printf(" ok. \n")

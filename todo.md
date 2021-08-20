@@ -16,3 +16,4 @@
 -  [ ]   load helmfile from repo
 -  [ ]   - `--set externalZone=%s"`
 -  [ ]   env selector
+-  [ ]   is it okay that test needs a valid kubeconfig to run?

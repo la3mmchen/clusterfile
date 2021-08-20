@@ -23,7 +23,7 @@ func TestAppWithoutKubeContext(t *testing.T) {
 	// fail if the app does not fail
 	if err := app.Run(args); err == nil {
 		t.Fail()
-		t.Logf("cli command [%v] failed. Error: %v", strings.Join(subCmd, ", "), err)
+		t.Logf("cli command [%v] failed. Expected error, got none.\n ", strings.Join(subCmd, ", "))
 	}
 }
 
@@ -46,6 +46,7 @@ func TestSubcmds(t *testing.T) {
 	cases := map[string][]string{
 		"build":             {"build"},
 		"dump":              {"dump"},
+		"lint":              {"lint"},
 		"preflight-offline": {"preflight", "--offline"},
 		"preflight":         {"preflight"},
 	}
