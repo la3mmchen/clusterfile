@@ -45,7 +45,7 @@ jobs:
         run: ./bin/clusterfilectl --help
 
   app-tests:
-    name: unit-tests
+    name: app-tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
