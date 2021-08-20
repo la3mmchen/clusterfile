@@ -1,6 +1,11 @@
 ---
 version: 1
 clusters:
+  - name: unit-tests
+    context: kind-kind
+    envs:
+      - name: web-apps
+        location: helmfile/web-apps.yaml
   - name: dev
     context: kubernetes
     envs:
