@@ -1,9 +1,8 @@
-package commands
+package app
 
 import (
 	"fmt"
 
-	"github.com/la3mmchen/clusterfile/internal/helpers"
 	"github.com/la3mmchen/clusterfile/internal/types"
 	"github.com/urfave/cli/v2"
 )
@@ -25,7 +24,7 @@ func Status(cfg *types.Configuration) *cli.Command {
 
 	cmd.Action = func(c *cli.Context) error {
 
-		err := helpers.PreloadCfg(cfg)
+		err := PreloadCfg(cfg)
 		if err != nil {
 			return err
 		}
@@ -37,7 +36,7 @@ func Status(cfg *types.Configuration) *cli.Command {
 			for i := range cfg.ActiveCluster.Envs {
 				envs[cfg.ActiveCluster.Envs[i].Name] = "state unknown"
 				if !cfg.StatusConfig.Offline {
-					rc, err := helpers.DiffEnv(cfg, cfg.ActiveCluster.Envs[i].Location)
+					rc, err := DiffEnv(cfg, cfg.ActiveCluster.Envs[i].Location)
 					if err != nil {
 						return err
 					}

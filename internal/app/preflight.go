@@ -1,11 +1,10 @@
-package commands
+package app
 
 import (
 	"errors"
 	"fmt"
 	"path/filepath"
 
-	"github.com/la3mmchen/clusterfile/internal/helpers"
 	"github.com/la3mmchen/clusterfile/internal/types"
 	"github.com/urfave/cli/v2"
 )
@@ -33,7 +32,7 @@ func Preflight(cfg *types.Configuration) *cli.Command {
 		// check kubeconfig
 		if !cfg.PreflightConfig.Offline {
 			fmt.Printf("%schecking %s \n", prefixText, cfg.ClusterfileLocation)
-			err := helpers.CheckKubeConfig()
+			err := CheckKubeConfig()
 			if err != nil {
 				return err
 			}
@@ -42,7 +41,7 @@ func Preflight(cfg *types.Configuration) *cli.Command {
 
 		// parse clusterfile
 		fmt.Printf("%schecking %s.", prefixText, cfg.ClusterfileLocation)
-		_, err := helpers.ParseClusterfile(filepath.Join(cfg.ProjectPath, cfg.ClusterfileLocation))
+		_, err := ParseClusterfile(filepath.Join(cfg.ProjectPath, cfg.ClusterfileLocation))
 		if err != nil {
 			fmt.Printf(err.Error())
 			return err
@@ -51,7 +50,7 @@ func Preflight(cfg *types.Configuration) *cli.Command {
 
 		// check if helmfile executable is present
 		fmt.Printf("%shelmfile executable.", prefixText)
-		if !helpers.CheckExecutable(cfg.HelmfileExecutable) {
+		if !CheckExecutable(cfg.HelmfileExecutable) {
 			return errors.New("executable not found in PATH")
 		}
 		fmt.Printf(" ok. \n")

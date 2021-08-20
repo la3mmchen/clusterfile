@@ -1,67 +1,66 @@
 package main
 
 import (
-	"fmt"
 	"os"
+	"strings"
 	"testing"
 
-	"github.com/la3mmchen/clusterfile/internal/commands"
-	"github.com/la3mmchen/clusterfile/internal/helpers"
-	"github.com/urfave/cli/v2"
+	"github.com/la3mmchen/clusterfile/internal/app"
 )
 
-func bootstrapTestApp() *cli.App {
-	// construct an app for testing purposes
-	cfg := helpers.GetTestCfg()
-
-	return commands.CreateApp(&cfg)
-}
-
-func TestApp(t *testing.T) {
-
-	app := bootstrapTestApp()
+// TestAppWithoutKubeContext
+// - TODO: test how app behaves without working kubeconfig
+// - TODO: how do the app behaves without kubeconfig file
+func TestAppWithoutKubeContext(t *testing.T) {
+	subCmd := []string{"preflight"}
+	app := app.BootstrapOfflineTestApp()
 
 	args := os.Args[0:1]
-	args = append(args, "")
+	for i := range subCmd {
+		args = append(args, subCmd[i])
+	}
 
-	if err := app.Run(args); err != nil {
-		fmt.Printf("Error: %v \n", err)
-		os.Exit(1)
+	// fail if the app does not fail
+	if err := app.Run(args); err == nil {
+		t.Fail()
+		t.Logf("cli command [%v] failed. Error: %v", strings.Join(subCmd, ", "), err)
 	}
 }
 
-func TestSubcmdBuild(t *testing.T) {
-	app := bootstrapTestApp()
+func TestIfAppRuns(t *testing.T) {
+	subCmd := []string{}
+	app := app.BootstrapTestApp()
 
 	args := os.Args[0:1]
-	args = append(args, "build")
+	for i := range subCmd {
+		args = append(args, subCmd[i])
+	}
 
 	if err := app.Run(args); err != nil {
-		fmt.Printf("Error: %v \n", err)
-		os.Exit(1)
+		t.Fail()
+		t.Logf("cli command [%v] failed. Error: %v", strings.Join(subCmd, ", "), err)
 	}
 }
 
-func TestSubcmdDump(t *testing.T) {
-	app := bootstrapTestApp()
-
-	args := os.Args[0:1]
-	args = append(args, "dump")
-
-	if err := app.Run(args); err != nil {
-		fmt.Printf("Error: %v \n", err)
-		os.Exit(1)
+func TestSubcmds(t *testing.T) {
+	cases := map[string][]string{
+		"build":             {"build"},
+		"dump":              {"dump"},
+		"preflight-offline": {"preflight", "--offline"},
+		"preflight":         {"preflight"},
 	}
-}
-
-func TestSubcmdPreflight(t *testing.T) {
-	app := bootstrapTestApp()
-
 	args := os.Args[0:1]
-	args = append(args, "preflight", "--offline")
+	for testcase, subcmds := range cases {
+		// create a new test app
+		app := app.BootstrapTestApp()
 
-	if err := app.Run(args); err != nil {
-		fmt.Printf("Error: %v \n", err)
-		os.Exit(1)
+		for i := range subcmds {
+			args = append(args, subcmds[i])
+		}
+
+		if err := app.Run(args); err != nil {
+			t.Fail()
+			t.Logf("SubCmd [%v]: cli command [%v] failed. Error: %v", testcase, strings.Join(subcmds, ", "), err)
+		}
 	}
 }

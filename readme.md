@@ -28,7 +28,7 @@ Clusterfile builds a layer on top that makes it easy to describe kubernetes clus
 
 Helmfile builds environments that deploys versioned helm charts together. Sometimes there is more than one environment in a kubernetes cluster, e.g. multiple web-tiers, middle-warez and backends. Thats the point where bash scripts or ci/cd takes over and syncs all the environments. 
 
-Clusterfile let you describe the environments per kubernetes cluster declarative and provides a binary to handle the helmfile subcommands.
+Clusterfile let you describe the environments per kubernetes cluster declarative and provides a binary to handle the helmfile subapp.
 
 _to be continued_
 

@@ -4,8 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/la3mmchen/clusterfile/internal/commands"
-	"github.com/la3mmchen/clusterfile/internal/helpers"
+	"github.com/la3mmchen/clusterfile/internal/app"
 	"github.com/la3mmchen/clusterfile/internal/types"
 )
 
@@ -22,11 +21,11 @@ func main() {
 		AppName:         "clusterfilectl",
 		AppUsage:        "Control the content of multiple k8s cluster via helmfile.",
 		AppVersion:      AppVersion,
-		ProjectPath:     helpers.GetProjectPath(),
+		ProjectPath:     app.GetProjectPath(),
 		SkipFlagParsing: false,
 	}
 
-	app := commands.CreateApp(&cfg)
+	app := app.CreateApp(&cfg)
 
 	if err := app.Run(os.Args); err != nil {
 		fmt.Printf("Error: %v \n", err)

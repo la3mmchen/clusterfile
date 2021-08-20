@@ -1,10 +1,9 @@
-package commands
+package app
 
 import (
 	"fmt"
 	"os"
 
-	"github.com/la3mmchen/clusterfile/internal/helpers"
 	"github.com/la3mmchen/clusterfile/internal/types"
 	"github.com/urfave/cli/v2"
 )
@@ -27,13 +26,13 @@ func Template(cfg *types.Configuration) *cli.Command {
 
 	cmd.Action = func(c *cli.Context) error {
 
-		err := helpers.PreloadCfg(cfg)
+		err := PreloadCfg(cfg)
 		if err != nil {
 			return err
 		}
 
 		for i := range cfg.ActiveCluster.Envs {
-			stdout, stderr, err := helpers.RunWithOutput(cfg.HelmfileExecutable, []string{"--file", cfg.ActiveCluster.Envs[i].Location, "template"})
+			stdout, stderr, err := RunWithOutput(cfg.HelmfileExecutable, []string{"--file", cfg.ActiveCluster.Envs[i].Location, "template"})
 			if err != nil {
 				return err
 			}

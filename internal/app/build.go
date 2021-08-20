@@ -1,4 +1,4 @@
-package commands
+package app
 
 import (
 	"fmt"
@@ -8,7 +8,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/la3mmchen/clusterfile/internal/helpers"
 	"github.com/la3mmchen/clusterfile/internal/types"
 	"github.com/urfave/cli/v2"
 )
@@ -39,14 +38,14 @@ func Build(cfg *types.Configuration) *cli.Command {
 
 	cmd.Action = func(c *cli.Context) error {
 
-		err := helpers.PreloadCfg(cfg)
+		err := PreloadCfg(cfg)
 		if err != nil {
 			return err
 		}
 
 		for i := range cfg.ActiveCluster.Envs {
 
-			stdout, stderr, err := helpers.RunWithOutput(cfg.HelmfileExecutable, []string{"--file", cfg.ActiveCluster.Envs[i].Location, "--file", "helmfile/web-apps.yaml", "build"})
+			stdout, stderr, err := RunWithOutput(cfg.HelmfileExecutable, []string{"--file", cfg.ActiveCluster.Envs[i].Location, "--file", "helmfile/web-apps.yaml", "build"})
 			if err != nil {
 				return err
 			}
@@ -56,7 +55,7 @@ func Build(cfg *types.Configuration) *cli.Command {
 			// create a randome file to write the build value
 			var name string
 			if cfg.BuildConfig.GitCommit {
-				name = fmt.Sprintf("%s.yaml", helpers.GetCommitSha())
+				name = fmt.Sprintf("%s.yaml", GetCommitSha())
 			} else {
 				rand.Seed(time.Now().UnixNano())
 				chars := []rune("abcdefghijklmnopqrstuvwxyz" +

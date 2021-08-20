@@ -1,4 +1,4 @@
-package commands
+package app
 
 import (
 	"github.com/la3mmchen/clusterfile/internal/types"

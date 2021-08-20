@@ -1,4 +1,4 @@
-package helpers
+package app
 
 import (
 	"github.com/la3mmchen/clusterfile/internal/types"
@@ -25,4 +25,19 @@ func GetTestCfg() types.Configuration {
 			},
 		},
 	}
+}
+
+func BootstrapTestApp() *cli.App {
+	// construct an app for testing purposes
+	cfg := GetTestCfg()
+
+	return CreateApp(&cfg)
+}
+
+func BootstrapOfflineTestApp() *cli.App {
+	// construct an app for testing purposes
+	cfg := GetTestCfg()
+	cfg.ActiveContext = ""
+
+	return CreateApp(&cfg)
 }

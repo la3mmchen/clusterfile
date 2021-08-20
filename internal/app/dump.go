@@ -1,7 +1,6 @@
-package commands
+package app
 
 import (
-	"github.com/la3mmchen/clusterfile/internal/helpers"
 	"github.com/la3mmchen/clusterfile/internal/types"
 	"github.com/urfave/cli/v2"
 )
@@ -14,12 +13,12 @@ func Dump(cfg *types.Configuration) *cli.Command {
 
 	cmd.Action = func(c *cli.Context) error {
 
-		err := helpers.PreloadCfg(cfg)
+		err := PreloadCfg(cfg)
 		if err != nil {
 			return err
 		}
 
-		types.DumpMe(cfg)
+		DumpMe(cfg)
 
 		return nil
 	}
