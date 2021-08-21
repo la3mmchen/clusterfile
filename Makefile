@@ -6,18 +6,28 @@ PROJECT_NAME := $(shell basename "$$PWD")
 
 .DEFAULT_GOAL := default
 
-tests: unit-tests app-tests
-
 .PHONY: default
-default: build run-help run-func
+default: tests build run
 
-.PHONY: build
-build: 
+#
+# *** build steps *** 
+# 
+.PHONY: build-executable
+build: go-mod build-executable
+
+go-mod:
+	@go mod vendor
+	@go mod verify
+
+build-executable: 
 	@rm -f ${EXECUTABLE}
 	@go build -o ${EXECUTABLE} -ldflags "-X main.AppVersion=${GIT_COMMIT}" .
 
-run:
-	@./${EXECUTABLE}
+#
+# *** example runs ****
+#
+.PHONY: run
+run: run-help run-func
 
 run-help:
 	@./${EXECUTABLE} --help
@@ -28,6 +38,12 @@ run-func:
 	@echo "\n____________________________"
 	@./${EXECUTABLE} status --offline
 	@echo "\n____________________________\n"
+
+#
+# *** tests ****
+#
+.PHONY: tests
+tests: unit-tests app-tests
 
 .PHONY: unit-tests
 unit-tests:
