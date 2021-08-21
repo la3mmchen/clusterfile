@@ -27,9 +27,9 @@ jobs:
     steps:
       - name: get deps
         run: |
-          apt-get -y install wget
-          wget https://github.com/roboll/helmfile/releases/download/$HELMFILE_VERSION/helmfile_linux_amd64
-          chmod +x helmfile_linux_amd64 && mv helmfile_linux_amd64 /usr/local/bin/helmfile
+          sudo apt-get -y install wget
+          sudo wget https://github.com/roboll/helmfile/releases/download/$HELMFILE_VERSION/helmfile_linux_amd64
+          sudo chmod +x helmfile_linux_amd64 && mv helmfile_linux_amd64 /usr/local/bin/helmfile
           helmfile --help
       - uses: actions/checkout@v1
       - uses: actions/setup-go@v2
