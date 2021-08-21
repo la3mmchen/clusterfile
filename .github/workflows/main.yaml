@@ -1,8 +1,11 @@
 name: buildflow
 on: [push]
 
-jobs:
+env:
+  GO_VERSION: 1.16.5
+  HELMFILE_VERSION: v0.140.0
 
+jobs:
   unit-tests:
     name: unit-tests
     continue-on-error: true #until all tests are implemented in a proper manner just go on
@@ -11,7 +14,7 @@ jobs:
       - uses: actions/checkout@v1
       - uses: actions/setup-go@v2
         with:
-          go-version: '1.16.5'
+          go-version: $GO_VERSION
       - name: make magic
         run: |
           make go-mod
@@ -19,13 +22,19 @@ jobs:
 
   app-tests:
     name: app-tests
-    continue-on-error: true #until all tests are implemented in a proper manner just go on
+    continue-on-error: true # until all tests are implemented in a proper manner just go on
     runs-on: ubuntu-latest
     steps:
+      - name: get deps
+        run: |
+          apt-get -y install wget
+          wget https://github.com/roboll/helmfile/releases/download/$HELMFILE_VERSION/helmfile_linux_amd64
+          chmod +x helmfile_linux_amd64 && mv helmfile_linux_amd64 /usr/local/bin/helmfile
+          helmfile --help
       - uses: actions/checkout@v1
       - uses: actions/setup-go@v2
         with:
-          go-version: '1.16.5'
+          go-version: $GO_VERSION
       - uses: engineerd/setup-kind@v0.5.0
       - name: make magic
         run: |
@@ -41,7 +50,7 @@ jobs:
       - uses: actions/checkout@v1
       - uses: actions/setup-go@v2
         with:
-          go-version: '1.16.5'
+          go-version: $GO_VERSION
       - name: make magic
         run: |
           make build GIT_COMMIT=${{ github.sha }}
