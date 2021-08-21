@@ -12,7 +12,8 @@ func TestPreloadCfg(t *testing.T) {
 	cfg.PreflightConfig.Offline = true
 
 	if err := PreloadCfg(&cfg); err != nil {
-		t.Error(err)
+		t.Log(err)
+		t.FailNow()
 	}
 
 }

@@ -17,3 +17,4 @@
 -  [ ]   - `--set externalZone=%s"`
 -  [ ]   env selector
 -  [ ]   is it okay that test needs a valid kubeconfig to run?
+-  [ ]   tests only run with working  k8s context. without the unit tests fail. i guess the unit tests should run without k8s

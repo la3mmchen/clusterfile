@@ -16,7 +16,7 @@ func TestIfAppRuns(t *testing.T) {
 	}
 
 	if err := app.Run(args); err != nil {
-		t.Fail()
 		t.Logf("cli command [%v] failed. Error: %v", strings.Join(subCmd, ", "), err)
+		t.FailNow()
 	}
 }
