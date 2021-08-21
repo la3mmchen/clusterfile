@@ -1,4 +1,4 @@
 bin/*
 vendor/*
+.rendered/*
 !*/.gitkeep
-.rendered

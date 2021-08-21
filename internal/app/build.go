@@ -68,6 +68,12 @@ func Build(cfg *types.Configuration) *cli.Command {
 				name = fmt.Sprintf("rendered-helmfile-%s.yaml", b.String())
 			}
 
+			// make sure the output dir is present
+
+			if _, err := os.Stat(cfg.OutputDir); !os.IsNotExist(err) {
+				_ = os.MkdirAll(cfg.OutputDir, 0740)
+			}
+
 			f, e := os.Create(path.Join(cfg.OutputDir, name))
 			if e != nil {
 				return e
