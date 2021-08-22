@@ -1,4 +1,5 @@
 bin/*
 vendor/*
 .rendered/*
+.tests/*
 !*/.gitkeep

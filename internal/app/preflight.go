@@ -3,7 +3,6 @@ package app
 import (
 	"errors"
 	"fmt"
-	"path/filepath"
 
 	"github.com/la3mmchen/clusterfile/internal/types"
 	"github.com/urfave/cli/v2"
@@ -40,9 +39,9 @@ func Preflight(cfg *types.Configuration) *cli.Command {
 
 		// parse clusterfile
 		fmt.Printf("%schecking %s.", prefixText, cfg.ClusterfileLocation)
-		_, err := ParseClusterfile(filepath.Join(cfg.ProjectPath, cfg.ClusterfileLocation))
+		_, err := ParseClusterfile(cfg)
 		if err != nil {
-			fmt.Printf("%v", err.Error())
+			fmt.Printf("%v \n", err.Error())
 			return err
 		}
 		fmt.Printf(" ok. \n")

@@ -27,7 +27,7 @@ func TestAppWithoutKubeContext(t *testing.T) {
 	}
 }
 
-func TestIfAppRuns(t *testing.T) {
+func TestAppRun(t *testing.T) {
 	subCmd := []string{}
 	app := app.BootstrapTestApp()
 
@@ -60,8 +60,8 @@ func TestSubcmds(t *testing.T) {
 		}
 
 		if err := app.Run(args); err != nil {
-			t.Fail()
 			t.Logf("SubCmd [%v]: cli command [%v] failed. Error: %v", testcase, strings.Join(subcmds, ", "), err)
+			t.FailNow()
 		}
 	}
 }

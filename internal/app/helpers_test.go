@@ -6,7 +6,7 @@ import (
 )
 
 func TestPreloadCfg(t *testing.T) {
-	cfg := GetTestCfg()
+	cfg := getTestCfg()
 
 	// only test offline stuff
 	cfg.PreflightConfig.Offline = true

@@ -38,7 +38,11 @@ func DiffEnv(cfg *types.Configuration, envfile string) (int, error) {
 func PreloadCfg(cfg *types.Configuration) error {
 	var err error
 
-	cfg.ActiveContext, err = GetActiveKubeContext()
+	if len(cfg.OverwrittenKubeContext) == 0 {
+		cfg.ActiveContext, err = GetActiveKubeContext()
+	} else {
+		cfg.ActiveContext = cfg.OverwrittenKubeContext
+	}
 
 	if err != nil {
 		fmt.Printf("Error loading kube context: [%v] \n", err)
@@ -46,7 +50,7 @@ func PreloadCfg(cfg *types.Configuration) error {
 	}
 
 	// parse clusterfile
-	cfg.Clusterfile, err = ParseClusterfile(filepath.Join(cfg.ProjectPath, cfg.ClusterfileLocation))
+	cfg.Clusterfile, err = ParseClusterfile(cfg)
 	if err != nil {
 		return err
 	}
@@ -130,9 +134,19 @@ func RunWithOutput(prog string, args []string) (bytes.Buffer, bytes.Buffer, erro
 	return stdout, stderr, nil
 }
 
-func ParseClusterfile(clusterfile string) (types.Clusterfile, error) {
+func ParseClusterfile(cfg *types.Configuration) (types.Clusterfile, error) {
+	var tmpString string
+	// check if cfg.Clusterfile is an absolute path
+	fileinfo, err := os.Stat(cfg.ClusterfileLocation)
+
+	if !os.IsNotExist(err) && !fileinfo.IsDir() {
+		tmpString = cfg.ClusterfileLocation
+	} else {
+		tmpString = filepath.Join(cfg.ProjectPath, cfg.ClusterfileLocation)
+	}
+
 	var clfl = types.Clusterfile{
-		Location: clusterfile,
+		Location: tmpString,
 	}
 
 	f, err := os.Open(clfl.Location)
@@ -178,12 +192,10 @@ func ValidateEnvHelmfile(cfg *types.Configuration, ignore bool) error {
 }
 
 func CheckKubeConfig(cfg *types.Configuration) error {
-	fmt.Printf("\nOverwrittenKubeContext: %+v \n", cfg.OverwrittenKubeContext)
 	var kubeconfig *string
 	// use provided flag
 	if len(cfg.OverwrittenKubeContext) > 0 {
 		kubeconfig = &cfg.OverwrittenKubeContext
-		fmt.Printf("\n If: %+v \n", kubeconfig)
 	} else {
 		// check kubeconfig
 		if home := homedir.HomeDir(); home != "" {

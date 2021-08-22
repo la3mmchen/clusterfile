@@ -18,11 +18,12 @@ var (
 func main() {
 
 	var cfg = types.Configuration{
-		AppName:         "clusterfilectl",
-		AppUsage:        "Control the content of multiple k8s cluster via helmfile.",
-		AppVersion:      AppVersion,
-		ProjectPath:     app.GetProjectPath(),
-		SkipFlagParsing: false,
+		AppName:             "clusterfilectl",
+		AppUsage:            "Control the content of multiple k8s cluster via helmfile.",
+		AppVersion:          AppVersion,
+		ClusterfileLocation: "configs/clusterfile.yaml",
+		ProjectPath:         app.GetProjectPath(),
+		SkipFlagParsing:     false,
 	}
 
 	app := app.CreateApp(&cfg)

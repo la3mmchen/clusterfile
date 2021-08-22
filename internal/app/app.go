@@ -9,7 +9,7 @@ func CreateApp(cfg *types.Configuration) *cli.App {
 	cliFlags := []cli.Flag{
 		&cli.StringFlag{
 			Name:        "clusterfile",
-			Value:       "configs/clusterfile.yaml",
+			Value:       cfg.ClusterfileLocation,
 			Usage:       "Clusterfile to parse.",
 			Destination: &cfg.ClusterfileLocation,
 		},
@@ -34,7 +34,7 @@ func CreateApp(cfg *types.Configuration) *cli.App {
 		&cli.StringFlag{
 			Name:        "kube-context",
 			Value:       cfg.OverwrittenKubeContext,
-			Usage:       "Overwrite kubernetes context. may be useful for ci/cd.)", // TODO: implement me
+			Usage:       "Overwrite kubernetes context. may be useful for ci/cd.)",
 			Destination: &cfg.OverwrittenKubeContext,
 		},
 		&cli.BoolFlag{
