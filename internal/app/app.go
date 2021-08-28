@@ -5,6 +5,9 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
+// CreateApp builds the cli app by enriching the
+// urface/cli app struct with our params, flags, and commands.
+// returns a pointer to a cli.App struct
 func CreateApp(cfg *types.Configuration) *cli.App {
 	cliFlags := []cli.Flag{
 		&cli.StringFlag{

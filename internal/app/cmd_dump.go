@@ -18,7 +18,7 @@ func Dump(cfg *types.Configuration) *cli.Command {
 			return err
 		}
 
-		DumpMe(cfg)
+		dumpMe(cfg)
 
 		return nil
 	}

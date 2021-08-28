@@ -56,3 +56,7 @@ unit-tests:
 app-tests:
 	@go test -cover -failfast -short "."
 	@echo "\n____________________________"
+
+.PHONY: add-to-path
+add-to-path: build-executable
+	@cp ./${EXECUTABLE} /usr/local/bin/${BINARY_NAME}

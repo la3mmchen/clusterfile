@@ -1,17 +1,14 @@
 package app
 
 import (
-	"bytes"
 	"context"
 	"errors"
 	"flag"
 	"fmt"
 	"io/fs"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"runtime"
-	"strconv"
 	"strings"
 
 	"github.com/la3mmchen/clusterfile/internal/types"
@@ -34,7 +31,10 @@ func DiffEnv(cfg *types.Configuration, envfile string) (int, error) {
 	return RunWithRc(cfg.HelmfileExecutable, []string{"--file", envfile, "diff", "--detailed-exitcode"}, true)
 }
 
-// PreloadCfg create parsed content in global cfg
+// PreloadCfg create parsed content into the global config struct
+// it takes a pointer to the configuration and inserts certain
+// values in there
+// returns an error if preloading went wrong
 func PreloadCfg(cfg *types.Configuration) error {
 	var err error
 
@@ -66,6 +66,8 @@ func PreloadCfg(cfg *types.Configuration) error {
 	return nil
 }
 
+// GetActiveKubeContext returns the current kubernetes context
+// is loaded while running our app.
 func GetActiveKubeContext() (string, error) {
 
 	stdout, _, err := RunWithOutput("kubectl", []string{"config", "current-context"}) // i'm to stupid to do it with clientcmd
@@ -81,59 +83,7 @@ func GetActiveKubeContext() (string, error) {
 	return parsedContext[len(parsedContext)-1], nil
 }
 
-func GetCommitSha() string {
-	// TODO: implement me
-	return "a6076f8" //TODO: just return a dev value
-}
-
-func CheckExecutable(cmd string) bool {
-
-	_, err := exec.LookPath(cmd)
-	return err == nil
-
-}
-
-func RunWithRc(prog string, args []string, silent bool) (int, error) {
-	cmd := exec.Command(prog, args...)
-
-	if !silent {
-		fmt.Printf("Executing: [%v] \n", cmd)
-	}
-
-	err := cmd.Run()
-
-	// probably the most stupid way to get the plan rc of the command ¯\_(ツ)_/¯
-	exitCode := 0
-	var e error
-	if err != nil {
-		exitCode, e = strconv.Atoi(strings.ReplaceAll(fmt.Sprintf("%v", err), "exit status ", ""))
-	}
-
-	if e != nil {
-		return 42, e // return non zero integer
-	}
-
-	return exitCode, nil
-}
-
-func RunWithOutput(prog string, args []string) (bytes.Buffer, bytes.Buffer, error) {
-	var stdout bytes.Buffer
-	var stderr bytes.Buffer
-	cmd := exec.Command(prog, args...)
-
-	fmt.Printf("Executing: [%v] \n", cmd)
-	cmd.Stdout = &stdout
-	cmd.Stderr = &stderr
-
-	err := cmd.Run()
-
-	if err != nil {
-		return bytes.Buffer{}, stderr, err
-	}
-
-	return stdout, stderr, nil
-}
-
+// ParseCLusterfile returns the parsed contents of the clusterfile
 func ParseClusterfile(cfg *types.Configuration) (types.Clusterfile, error) {
 	var tmpString string
 	// check if cfg.Clusterfile is an absolute path
@@ -164,6 +114,8 @@ func ParseClusterfile(cfg *types.Configuration) (types.Clusterfile, error) {
 	return clfl, err
 }
 
+// SetActiveCluster determines the current clustr and copys the
+// contents to a new position in config struct.
 func SetActiveCluster(cfg *types.Configuration) bool {
 	var found = false
 
@@ -176,6 +128,8 @@ func SetActiveCluster(cfg *types.Configuration) bool {
 	return found
 }
 
+// ValidateEnvHelmfile check the existence of the sub-helmfiles that are configured
+// for the active cluster
 func ValidateEnvHelmfile(cfg *types.Configuration, ignore bool) error {
 
 	for i := range cfg.ActiveCluster.Envs {
@@ -187,10 +141,11 @@ func ValidateEnvHelmfile(cfg *types.Configuration, ignore bool) error {
 			}
 		}
 	}
-
 	return nil
 }
 
+// CheckKubeConfig uses the current kubernetes context to
+// test if the kubernetes cluster can be reached
 func CheckKubeConfig(cfg *types.Configuration) error {
 	var kubeconfig *string
 	// use provided flag
@@ -222,8 +177,4 @@ func CheckKubeConfig(cfg *types.Configuration) error {
 	}
 
 	return nil
-}
-
-func removeFromSliceByIndex(s []types.Env, index int) []types.Env {
-	return append(s[:index], s[index+1:]...)
 }

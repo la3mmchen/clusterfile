@@ -1,10 +1,23 @@
 package app
 
 import (
+	"fmt"
 	"os"
 	"strings"
 	"testing"
+
+	"github.com/la3mmchen/clusterfile/internal/types"
 )
+
+func TestCreateApp(t *testing.T) {
+	var cfg types.Configuration
+	app := CreateApp(&cfg)
+
+	if _, err := app.ToMan(); err != nil {
+		fmt.Printf("Error: %v \n", err)
+		os.Exit(1)
+	}
+}
 
 func TestIfAppRuns(t *testing.T) {
 	subCmd := []string{}
