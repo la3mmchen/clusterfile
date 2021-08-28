@@ -55,7 +55,7 @@ func Build(cfg *types.Configuration) *cli.Command {
 			// create a randome file to write the build value
 			var name string
 			if cfg.BuildConfig.GitCommit {
-				name = fmt.Sprintf("%s.yaml", GetCommitSha())
+				name = fmt.Sprintf("%s.yaml", getCommitSha())
 			} else {
 				rand.Seed(time.Now().UnixNano())
 				chars := []rune("abcdefghijklmnopqrstuvwxyz" +
