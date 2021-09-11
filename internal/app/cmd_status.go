@@ -34,7 +34,7 @@ func Status(cfg *types.Configuration) *cli.Command {
 			envs := make(map[string]string)
 
 			for i := range cfg.ActiveCluster.Envs {
-				envs[cfg.ActiveCluster.Envs[i].Name] = "state unknown"
+				envs[cfg.ActiveCluster.Envs[i].Name] = "state not identified."
 				if !cfg.StatusConfig.Offline {
 					rc, err := DiffEnv(cfg, cfg.ActiveCluster.Envs[i].Location)
 					if err != nil {

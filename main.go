@@ -21,7 +21,7 @@ func main() {
 		AppName:             "clusterfilectl",
 		AppUsage:            "Control the content of multiple k8s cluster via helmfile.",
 		AppVersion:          AppVersion,
-		ClusterfileLocation: "configs/clusterfile.yaml",
+		ClusterfileLocation: "data/clusterfile.yaml",
 		ProjectPath:         app.GetProjectPath(),
 		SkipFlagParsing:     false,
 	}

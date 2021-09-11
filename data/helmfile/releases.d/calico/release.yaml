@@ -1,0 +1,7 @@
+calico:
+  releaseName: calico
+  chart:
+    name: arhatdev/calico
+    version: 0.1.7
+  installed: 'true' # mind the quotation marks. otherwise value is treated as bool during parsing
+  namespace: calico

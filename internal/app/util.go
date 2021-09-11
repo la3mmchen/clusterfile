@@ -28,6 +28,7 @@ func GetProjectPath() string {
 }
 
 func DiffEnv(cfg *types.Configuration, envfile string) (int, error) {
+	// TODO: this returns 1 either if there is a diff in the envs or if the k8s cluster can not be reached
 	return RunWithRc(cfg.HelmfileExecutable, []string{"--file", envfile, "diff", "--detailed-exitcode"}, true)
 }
 
@@ -125,15 +126,21 @@ func SetActiveCluster(cfg *types.Configuration) bool {
 			found = true
 		}
 	}
+
+	// resolve relative or absolute paths in ActiveCluster.Envs.Locations
+	for i := range cfg.ActiveCluster.Envs {
+		if !filepath.IsAbs(cfg.ActiveCluster.Envs[i].Location) {
+			cfg.ActiveCluster.Envs[i].Location = filepath.Join(cfg.ProjectPath, filepath.Dir(cfg.ClusterfileLocation), cfg.ActiveCluster.Envs[i].Location)
+		}
+	}
 	return found
 }
 
 // ValidateEnvHelmfile check the existence of the sub-helmfiles that are configured
 // for the active cluster
 func ValidateEnvHelmfile(cfg *types.Configuration, ignore bool) error {
-
 	for i := range cfg.ActiveCluster.Envs {
-		if _, err := os.Stat(filepath.Join(cfg.ProjectPath, cfg.ActiveCluster.Envs[i].Location)); errors.Is(err, fs.ErrNotExist) {
+		if _, err := os.Stat(cfg.ActiveCluster.Envs[i].Location); errors.Is(err, fs.ErrNotExist) {
 			if ignore {
 				cfg.ActiveCluster.Envs = removeFromSliceByIndex(cfg.ActiveCluster.Envs, i)
 			} else { // only return if we do not ignore the error

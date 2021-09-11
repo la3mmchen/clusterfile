@@ -2,8 +2,8 @@
 
 -  [ ]   envs
 -  [x]   sync (--env=<kn> ...)
--  [ ]   list (--env=<kn> ...)
--  [ ]   status (--env=<kn> ...)
+-  [x]   list (--env=<kn> ...)
+-  [x]   status (--env=<kn> ...)
 -  [ ]   destroy (--env=<kn> ...)
 -  [ ]   diff  (--env=<kn> ...)
 -  [ ]   test (--env=<kn> ...)

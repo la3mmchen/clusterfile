@@ -1,0 +1,7 @@
+nginx:
+  releaseName: nginx
+  chart:
+    name: bitnami/nginx
+    version: 8.9.1
+  installed: 'true' # mind the quotation marks. otherwise value is treated as bool during parsing
+  namespace: nginx

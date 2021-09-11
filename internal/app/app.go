@@ -23,12 +23,6 @@ func CreateApp(cfg *types.Configuration) *cli.App {
 			Destination: &cfg.HelmfileExecutable,
 		},
 		&cli.StringFlag{
-			Name:        "helmfile",
-			Value:       "helmfile/helmfile.yaml",
-			Usage:       "Helmfile to use.",
-			Destination: &cfg.Helmfile,
-		},
-		&cli.StringFlag{
 			Name:        "output-dir",
 			Value:       ".rendered",
 			Usage:       "Output-Dir to write to",
@@ -61,6 +55,7 @@ func CreateApp(cfg *types.Configuration) *cli.App {
 			Diff(cfg),
 			Dump(cfg),
 			Lint(cfg),
+			List(cfg),
 			Preflight(cfg),
 			Status(cfg),
 			Sync(cfg),

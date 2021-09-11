@@ -1,0 +1,33 @@
+---
+helmDefaults:
+  skipDeps: false
+commonLabels:
+  # label all ressources
+  createdBy: clusterfilectl
+repositories: []
+values:
+  - base: {}
+  - releases.d/*/release.yaml # includes the releases configs.
+  - releases:
+    - nginx
+
+# releases defines the apps that are included. this snippet takes 
+# all the entries of the releases array. the release array might be overwritten in the loaded environment
+releases:
+  {{- $global := . -}}
+  {{- range $release := $global.Values.releases }}
+  {{- $cnf := index $global.Values $release}}
+  - name: {{ $cnf.releaseName }}
+    namespace: {{ $global.Values.base | getOrNil "namespaceOverwrite" | default $cnf.namespace }}
+    chart: {{ $cnf.chart.name }}
+    version: {{ $cnf.chart.version }}
+    installed: {{ $global.Values.base | getOrNil "installedOverwrite" | default $cnf.installed }}
+    values:
+    - nameOverride: {{ $cnf.releaseName }}
+    {{ if $cnf | getOrNil "image" }}
+    - image: {{ $cnf.image }}
+    {{ end }}
+    {{ if $cnf | getOrNil "version" }}
+    - version: {{ $cnf.version }}
+    {{ end }}
+  {{- end }}

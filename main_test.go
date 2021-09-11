@@ -49,6 +49,9 @@ func TestSubcmds(t *testing.T) {
 		"lint":              {"lint"},
 		"preflight-offline": {"preflight", "--offline"},
 		"preflight":         {"preflight"},
+		"list":              {"list"},
+		"status":            {"status"},
+		"status-offline":    {"status", "--offline"},
 	}
 	args := os.Args[0:1]
 	for testcase, subcmds := range cases {
