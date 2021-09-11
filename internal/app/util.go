@@ -19,11 +19,11 @@ import (
 	"k8s.io/client-go/util/homedir"
 )
 
-// GetProjectPath return root path of the project. might be worth to refacotring into using contstructor pattern
 // TODO: might be cool to add error handling
-func GetProjectPath() string {
+func WithProjectPath(s string) string {
 	_, b, _, _ := runtime.Caller(0)
-	path := filepath.Join(filepath.Dir(b), "../..") // feels hacky but works
+	//path := filepath.Join(filepath.Dir(b), "../..") // feels hacky but works
+	path := filepath.Join(filepath.Dir(b), "../..", s) // feels hacky but works
 	return path
 }
 
@@ -93,7 +93,7 @@ func ParseClusterfile(cfg *types.Configuration) (types.Clusterfile, error) {
 	if !os.IsNotExist(err) && !fileinfo.IsDir() {
 		tmpString = cfg.ClusterfileLocation
 	} else {
-		tmpString = filepath.Join(cfg.ProjectPath, cfg.ClusterfileLocation)
+		tmpString = cfg.ClusterfileLocation
 	}
 
 	var clfl = types.Clusterfile{
@@ -130,7 +130,8 @@ func SetActiveCluster(cfg *types.Configuration) bool {
 	// resolve relative or absolute paths in ActiveCluster.Envs.Locations
 	for i := range cfg.ActiveCluster.Envs {
 		if !filepath.IsAbs(cfg.ActiveCluster.Envs[i].Location) {
-			cfg.ActiveCluster.Envs[i].Location = filepath.Join(cfg.ProjectPath, filepath.Dir(cfg.ClusterfileLocation), cfg.ActiveCluster.Envs[i].Location)
+			cfg.ActiveCluster.Envs[i].Location = filepath.Join(filepath.Dir(cfg.ClusterfileLocation), cfg.ActiveCluster.Envs[i].Location)
+
 		}
 	}
 	return found

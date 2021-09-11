@@ -24,7 +24,6 @@ type Configuration struct {
 	StatusConfig    Status
 
 	// parsed content
-	ProjectPath   string
 	Clusterfile   Clusterfile
 	ActiveCluster Cluster
 	ActiveContext string

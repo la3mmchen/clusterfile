@@ -5,6 +5,11 @@ import (
 	"testing"
 )
 
+func TestWithProjectPath(t *testing.T) {
+	fmt.Printf("%v", WithProjectPath("file"))
+
+}
+
 func TestPreloadCfg(t *testing.T) {
 	cfg := getTestCfg()
 
@@ -15,10 +20,5 @@ func TestPreloadCfg(t *testing.T) {
 		t.Log(err)
 		t.FailNow()
 	}
-
-}
-
-func TestGetProjectPath(t *testing.T) {
-	fmt.Printf("%v", GetProjectPath())
 
 }
