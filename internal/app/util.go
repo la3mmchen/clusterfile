@@ -1,32 +1,26 @@
 package app
 
 import (
-	"context"
 	"errors"
-	"flag"
 	"fmt"
 	"io/fs"
 	"os"
 	"path/filepath"
 	"runtime"
-	"strings"
 
 	"github.com/la3mmchen/clusterfile/internal/types"
 	"gopkg.in/yaml.v3"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/client-go/kubernetes"
-	"k8s.io/client-go/tools/clientcmd"
-	"k8s.io/client-go/util/homedir"
 )
 
+// WithProjectPath enriches relative path with the project path
 // TODO: might be cool to add error handling
 func WithProjectPath(s string) string {
 	_, b, _, _ := runtime.Caller(0)
-	//path := filepath.Join(filepath.Dir(b), "../..") // feels hacky but works
 	path := filepath.Join(filepath.Dir(b), "../..", s) // feels hacky but works
 	return path
 }
 
+// DiffEnv executes a helmfile diff for a given env
 func DiffEnv(cfg *types.Configuration, envfile string) (int, error) {
 	// TODO: this returns 1 either if there is a diff in the envs or if the k8s cluster can not be reached
 	return RunWithRc(cfg.HelmfileExecutable, []string{"--file", envfile, "diff", "--detailed-exitcode"}, true)
@@ -40,7 +34,7 @@ func PreloadCfg(cfg *types.Configuration) error {
 	var err error
 
 	if len(cfg.OverwrittenKubeContext) == 0 {
-		cfg.ActiveContext, err = GetActiveKubeContext()
+		cfg.ActiveContext, err = getActiveKubeContext()
 	} else {
 		cfg.ActiveContext = cfg.OverwrittenKubeContext
 	}
@@ -48,6 +42,11 @@ func PreloadCfg(cfg *types.Configuration) error {
 	if err != nil {
 		fmt.Printf("Error loading kube context: [%v] \n", err)
 		return err
+	}
+
+	err = checkKubeConfig(cfg)
+	if err != nil {
+		return fmt.Errorf("can't connect to kubernetes cluser [%s]", cfg.ActiveContext)
 	}
 
 	// parse clusterfile
@@ -66,23 +65,6 @@ func PreloadCfg(cfg *types.Configuration) error {
 	}
 
 	return nil
-}
-
-// GetActiveKubeContext returns the current kubernetes context
-// is loaded while running our app.
-func GetActiveKubeContext() (string, error) {
-
-	stdout, _, err := RunWithOutput("kubectl", []string{"config", "current-context"}) // i'm to stupid to do it with clientcmd
-
-	if err != nil {
-		return "", err
-	}
-
-	parsedContext := strings.Split(strings.TrimSuffix(stdout.String(), "\n"), "@")
-
-	fmt.Printf("Parsed context from your env: [%v] \n", parsedContext[len(parsedContext)-1])
-
-	return parsedContext[len(parsedContext)-1], nil
 }
 
 // ParseCLusterfile returns the parsed contents of the clusterfile
@@ -163,40 +145,5 @@ func ValidateEnvHelmfile(cfg *types.Configuration) error {
 			}
 		}
 	}
-	return nil
-}
-
-// CheckKubeConfig uses the current kubernetes context to
-// test if the kubernetes cluster can be reached
-func CheckKubeConfig(cfg *types.Configuration) error {
-	var kubeconfig *string
-	// use provided flag
-	if len(cfg.OverwrittenKubeContext) > 0 {
-		kubeconfig = &cfg.OverwrittenKubeContext
-	} else {
-		// check kubeconfig
-		if home := homedir.HomeDir(); home != "" {
-			kubeconfig = flag.String("kubeconfig", filepath.Join(home, ".kube", "config"), "(optional) absolute path to the kubeconfig file")
-		} else {
-			kubeconfig = flag.String("kubeconfig", "", "absolute path to the kubeconfig file")
-		}
-		flag.Parse()
-	}
-	// use the current context in kubeconfig
-	config, err := clientcmd.BuildConfigFromFlags("", *kubeconfig)
-	if err != nil {
-		return err
-	}
-	// create the clientset
-	clientset, err := kubernetes.NewForConfig(config)
-	if err != nil {
-		return err
-	}
-
-	_, err = clientset.CoreV1().Pods("").List(context.TODO(), metav1.ListOptions{})
-	if err != nil {
-		return err
-	}
-
 	return nil
 }

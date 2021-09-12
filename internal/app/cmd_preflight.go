@@ -30,7 +30,7 @@ func Preflight(cfg *types.Configuration) *cli.Command {
 		// check kubeconfig
 		if !cfg.PreflightConfig.Offline {
 			fmt.Printf("%schecking kubernetes config and connect to cluster. \n", prefixText)
-			err := CheckKubeConfig(cfg)
+			err := checkKubeConfig(cfg)
 			if err != nil {
 				return err
 			}
