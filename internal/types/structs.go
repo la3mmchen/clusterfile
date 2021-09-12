@@ -8,14 +8,15 @@ type Configuration struct {
 	AppName                string
 	AppVersion             string
 	AppUsage               string
-	Debug                  string
-	SkipFlagParsing        bool
 	ClusterfileLocation    string
-	OverwrittenKubeContext string
+	Debug                  string
+	EnvSelection           string
+	Ignore                 bool
 	Helmfile               string
 	HelmfileExecutable     string
+	OverwrittenKubeContext string
 	OutputDir              string
-	Ignore                 bool
+	SkipFlagParsing        bool
 
 	// link to other structs that contains input settings
 	PreflightConfig Preflight

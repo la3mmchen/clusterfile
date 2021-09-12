@@ -17,28 +17,34 @@ func CreateApp(cfg *types.Configuration) *cli.App {
 			Destination: &cfg.ClusterfileLocation,
 		},
 		&cli.StringFlag{
+			Name:        "env",
+			Value:       "",
+			Usage:       "Select an environment to operate instead of all.",
+			Destination: &cfg.EnvSelection,
+		},
+		&cli.StringFlag{
 			Name:        "helmfile-binary",
 			Value:       "/usr/local/bin/helmfile",
-			Usage:       "Executable",
+			Usage:       "Helmfile executable to use.",
 			Destination: &cfg.HelmfileExecutable,
 		},
 		&cli.StringFlag{
 			Name:        "output-dir",
 			Value:       ".rendered",
-			Usage:       "Output-Dir to write to",
+			Usage:       "Output-Dir to write to.",
 			Destination: &cfg.OutputDir,
 		},
 		&cli.StringFlag{
 			Name:        "kube-context",
 			Value:       cfg.OverwrittenKubeContext,
-			Usage:       "Overwrite kubernetes context. may be useful for ci/cd.)",
+			Usage:       "Overwrite kubernetes context. (may be useful for ci/cd.)",
 			Destination: &cfg.OverwrittenKubeContext,
 		},
 		&cli.BoolFlag{
 			Name:        "ignore",
 			Value:       false,
 			Destination: &cfg.Ignore,
-			DefaultText: "default: false, if true ignore missing helmfile env app",
+			DefaultText: "default: false, if true ignore missing helmfile.",
 			Usage:       "Ignore missing env specific helmfile.",
 		},
 	}
