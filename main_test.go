@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 	"strings"
 	"testing"
@@ -47,6 +48,7 @@ func TestSubcmds(t *testing.T) {
 		"build":             {"build"},
 		"dump":              {"dump"},
 		"list":              {"list"},
+		"list-with-env":     {"--env=addons", "list"},
 		"lint":              {"lint"},
 		"preflight":         {"preflight"},
 		"preflight-offline": {"preflight", "--offline"},
@@ -54,8 +56,10 @@ func TestSubcmds(t *testing.T) {
 		"status-offline":    {"status", "--offline"},
 		"test":              {"test"},
 	}
+
 	args := os.Args[0:1]
 	for testcase, subcmds := range cases {
+		fmt.Printf("__Test: [%v] \n", testcase)
 		// create a new test app
 		app := app.BootstrapTestApp()
 

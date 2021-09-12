@@ -66,7 +66,7 @@ clusters:
   - name: unit-tests
     context: kind-kind
     envs:
-      - name: web-apps
+      - name: addons
         location: addons.yaml
   - name: empty-cluster
     context: kind-kind-empty
@@ -96,6 +96,7 @@ func getTestCfg() types.Configuration {
 		AppVersion:             "golang-test",
 		AppUsage:               "Control the content of multiple k8s cluster via helmfile.",
 		OverwrittenKubeContext: "kind-kind",
+		EnvSelection:           "",
 		SkipFlagParsing:        true,
 		ClusterfileLocation:    createTestFiles(),
 		AdditionalFlags: []cli.Flag{
@@ -118,6 +119,7 @@ func getBrokenTestCfg() types.Configuration {
 		AppVersion:             "golang-test",
 		AppUsage:               "Control the content of multiple k8s cluster via helmfile.",
 		OverwrittenKubeContext: "broken-context",
+		EnvSelection:           "",
 		SkipFlagParsing:        true,
 		ClusterfileLocation:    createTestFiles(),
 		AdditionalFlags: []cli.Flag{
