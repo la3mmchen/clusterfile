@@ -54,6 +54,7 @@ func CreateApp(cfg *types.Configuration) *cli.App {
 			Destroy(cfg),
 			Diff(cfg),
 			Dump(cfg),
+			HelmTest(cfg),
 			Lint(cfg),
 			List(cfg),
 			Preflight(cfg),

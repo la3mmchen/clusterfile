@@ -46,10 +46,10 @@ func TestSubcmds(t *testing.T) {
 	cases := map[string][]string{
 		"build":             {"build"},
 		"dump":              {"dump"},
-		"lint":              {"lint"},
-		"preflight-offline": {"preflight", "--offline"},
-		"preflight":         {"preflight"},
 		"list":              {"list"},
+		"lint":              {"lint"},
+		"preflight":         {"preflight"},
+		"preflight-offline": {"preflight", "--offline"},
 		"status":            {"status"},
 		"status-offline":    {"status", "--offline"},
 	}

@@ -20,6 +20,8 @@ func Diff(cfg *types.Configuration) *cli.Command {
 			return err
 		}
 
+		fmt.Printf("\nDiff environments for loaded kubernetes context [%v]. \n", cfg.ActiveContext)
+
 		for i := range cfg.ActiveCluster.Envs {
 			rc, err := RunWithRc(cfg.HelmfileExecutable, []string{"--file", cfg.ActiveCluster.Envs[i].Location, "diff", "--detailed-exitcode"}, false)
 			if err != nil {

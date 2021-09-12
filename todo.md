@@ -1,12 +1,12 @@
 # todos
 
--  [ ]   envs
+-  [x]   envs
 -  [x]   sync (--env=<kn> ...)
 -  [x]   list (--env=<kn> ...)
 -  [x]   status (--env=<kn> ...)
--  [ ]   destroy (--env=<kn> ...)
--  [ ]   diff  (--env=<kn> ...)
--  [ ]   test (--env=<kn> ...)
+-  [x]   destroy (--env=<kn> ...)
+-  [x]   diff  (--env=<kn> ...)
+-  [x]   test (--env=<kn> ...)
 -  [x]   lint (--env=<kn> ...)
 -  [x]   build (--env=<kn> ...)
 -  [x]   template (--env=<kn> ...)
