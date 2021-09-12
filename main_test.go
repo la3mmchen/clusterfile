@@ -52,6 +52,7 @@ func TestSubcmds(t *testing.T) {
 		"preflight-offline": {"preflight", "--offline"},
 		"status":            {"status"},
 		"status-offline":    {"status", "--offline"},
+		"test":              {"test"},
 	}
 	args := os.Args[0:1]
 	for testcase, subcmds := range cases {
