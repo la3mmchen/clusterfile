@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	"os"
 	"path/filepath"
 	"strings"
 
@@ -18,6 +19,8 @@ import (
 // checkKubeConfig uses the current kubernetes context to
 // test if the kubernetes cluster can be reached
 func checkKubeConfig(cfg *types.Configuration) error {
+
+	tmpFlags := flag.NewFlagSet(os.Args[0], flag.ExitOnError)
 	var kubeconfig *string
 	// use provided flag
 	if len(cfg.OverwrittenKubeContext) > 0 {
@@ -25,11 +28,10 @@ func checkKubeConfig(cfg *types.Configuration) error {
 	} else {
 		// check kubeconfig
 		if home := homedir.HomeDir(); home != "" {
-			kubeconfig = flag.String("kubeconfig", filepath.Join(home, ".kube", "config"), "(optional) absolute path to the kubeconfig file")
+			kubeconfig = tmpFlags.String("kubeconfig", filepath.Join(home, ".kube", "config"), "(optional) absolute path to the kubeconfig file")
 		} else {
-			kubeconfig = flag.String("kubeconfig", "", "absolute path to the kubeconfig file")
+			kubeconfig = tmpFlags.String("kubeconfig", "", "absolute path to the kubeconfig file")
 		}
-		flag.Parse()
 	}
 	// use the current context in kubeconfig
 	config, err := clientcmd.BuildConfigFromFlags("", *kubeconfig)
