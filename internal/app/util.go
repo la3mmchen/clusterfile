@@ -39,6 +39,9 @@ func PreloadCfg(cfg *types.Configuration) error {
 		cfg.ActiveContext = cfg.OverwrittenKubeContext
 	}
 
+	fmt.Printf(":: %+v \n", cfg.OverwrittenKubeContext)
+	fmt.Printf(":: %+v \n", cfg.ActiveContext)
+
 	if err != nil {
 		fmt.Printf("Error loading kube context: [%v] \n", err)
 		return err
@@ -46,7 +49,7 @@ func PreloadCfg(cfg *types.Configuration) error {
 
 	err = checkKubeConfig(cfg)
 	if err != nil {
-		return fmt.Errorf("can't connect to kubernetes cluser [%s]", cfg.ActiveContext)
+		return fmt.Errorf("can't connect to kubernetes cluster [%s]", cfg.ActiveContext)
 	}
 
 	// parse clusterfile

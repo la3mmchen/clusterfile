@@ -7,7 +7,7 @@ PROJECT_NAME := $(shell basename "$$PWD")
 .DEFAULT_GOAL := default
 
 .PHONY: default
-default: tests build run
+default: build run tests
 
 #
 # *** build steps *** 

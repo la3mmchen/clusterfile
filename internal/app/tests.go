@@ -34,8 +34,13 @@ func createTestFiles() string {
 ---
 version: 1
 clusters:
-  - name: unit-tests
+  - name: unit-tests-ci
     context: kind-kind
+    envs:
+      - name: web-apps
+        location: addons.yaml
+  - name: unit-tests-local
+    context: kubernetes
     envs:
       - name: web-apps
         location: addons.yaml
@@ -92,13 +97,12 @@ clusters:
 
 func getTestCfg() types.Configuration {
 	return types.Configuration{
-		AppName:                "clusterfile-test",
-		AppVersion:             "golang-test",
-		AppUsage:               "Control the content of multiple k8s cluster via helmfile.",
-		OverwrittenKubeContext: "kind-kind",
-		EnvSelection:           "",
-		SkipFlagParsing:        true,
-		ClusterfileLocation:    createTestFiles(),
+		AppName:             "clusterfile-test",
+		AppVersion:          "golang-test",
+		AppUsage:            "Control the content of multiple k8s cluster via helmfile.",
+		EnvSelection:        "",
+		SkipFlagParsing:     true,
+		ClusterfileLocation: createTestFiles(),
 		AdditionalFlags: []cli.Flag{
 			&cli.StringFlag{
 				Name: "test.testlogfile",
