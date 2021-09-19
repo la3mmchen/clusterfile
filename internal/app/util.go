@@ -39,9 +39,6 @@ func PreloadCfg(cfg *types.Configuration) error {
 		cfg.ActiveContext = cfg.OverwrittenKubeContext
 	}
 
-	fmt.Printf(":: %+v \n", cfg.OverwrittenKubeContext)
-	fmt.Printf(":: %+v \n", cfg.ActiveContext)
-
 	if err != nil {
 		fmt.Printf("Error loading kube context: [%v] \n", err)
 		return err
