@@ -23,6 +23,7 @@ func main() {
 		AppVersion:          AppVersion,
 		ClusterfileLocation: app.WithProjectPath("data/clusterfile.yaml"),
 		SkipFlagParsing:     false,
+		GitWorkDir:          ".gitworkdir",
 	}
 
 	app := app.CreateApp(&cfg)

@@ -7,6 +7,7 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"strings"
 
 	"github.com/la3mmchen/clusterfile/internal/types"
 	"gopkg.in/yaml.v3"
@@ -114,9 +115,10 @@ func SetActiveCluster(cfg *types.Configuration) bool {
 
 	// resolve relative or absolute paths in ActiveCluster.Envs.Locations
 	for i := range cfg.ActiveCluster.Envs {
-		if !filepath.IsAbs(cfg.ActiveCluster.Envs[i].Location) {
+		if strings.HasPrefix(cfg.ActiveCluster.Envs[i].Location, "git") {
+			// do nothing
+		} else if !filepath.IsAbs(cfg.ActiveCluster.Envs[i].Location) {
 			cfg.ActiveCluster.Envs[i].Location = filepath.Join(filepath.Dir(cfg.ClusterfileLocation), cfg.ActiveCluster.Envs[i].Location)
-
 		}
 	}
 	return found
@@ -136,14 +138,37 @@ func ValidateEnvHelmfile(cfg *types.Configuration) error {
 			}
 		}
 
-		// check if the helmfile is present
-		if _, err := os.Stat(cfg.ActiveCluster.Envs[i].Location); errors.Is(err, fs.ErrNotExist) {
-			if cfg.Ignore {
-				cfg.ActiveCluster.Envs = removeFromSliceByIndex(cfg.ActiveCluster.Envs, i)
-			} else { // only return if we are not told to ignore via `--ignore`
-				return fmt.Errorf("specific helmfile [%s] file not found", cfg.ActiveCluster.Envs[i].Location)
+		// handle env files
+		if strings.HasPrefix(cfg.ActiveCluster.Envs[i].Location, "git") {
+
+			// handle git
+			if _, err := os.Stat(cfg.GitWorkDir); os.IsNotExist(err) {
+				_ = os.MkdirAll(cfg.GitWorkDir, 0740)
+			}
+
+			// TODO: save this in cfg as we might have multiple git repos
+			tempDir, err := os.MkdirTemp(WithProjectPath(".gitworkdir"), "fetched-by-git")
+			if err != nil {
+				return err
+			}
+
+			err = GitClone(tempDir, cfg.ActiveCluster.Envs[i].Location)
+			if err != nil {
+				return err
+			}
+
+		} else { // file based
+			if _, err := os.Stat(cfg.ActiveCluster.Envs[i].Location); errors.Is(err, fs.ErrNotExist) {
+				if cfg.Ignore {
+					cfg.ActiveCluster.Envs = removeFromSliceByIndex(cfg.ActiveCluster.Envs, i)
+				} else { // only return if we are not told to ignore via `--ignore`
+					return fmt.Errorf("specific helmfile [%s] file not found", cfg.ActiveCluster.Envs[i].Location)
+				}
 			}
 		}
+
+		// check if the helmfile is present
+
 	}
 	return nil
 }
