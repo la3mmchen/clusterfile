@@ -40,8 +40,8 @@ func PreloadCfg(cfg *types.Configuration) error {
 	}
 
 	if err != nil {
-		fmt.Printf("Error loading kube context: [%v] \n", err)
-		return err
+		fmt.Printf("You do not have a kube context. [%v] \n", err)
+		return nil
 	}
 
 	if !cfg.Offline {
