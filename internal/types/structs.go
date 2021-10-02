@@ -31,6 +31,7 @@ type Configuration struct {
 
 	// mixed stuff
 	AdditionalFlags []cli.Flag
+	GitWorkDir      string
 }
 
 // Status represents options for the cli subcommand

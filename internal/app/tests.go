@@ -103,6 +103,7 @@ func getTestCfg() types.Configuration {
 		EnvSelection:        "",
 		SkipFlagParsing:     true,
 		ClusterfileLocation: createTestFiles(),
+		GitWorkDir:          ".gitworkdir",
 		AdditionalFlags: []cli.Flag{
 			&cli.StringFlag{
 				Name: "test.testlogfile",
@@ -126,6 +127,7 @@ func getBrokenTestCfg() types.Configuration {
 		EnvSelection:           "",
 		SkipFlagParsing:        true,
 		ClusterfileLocation:    createTestFiles(),
+		GitWorkDir:             ".gitworkdir",
 		AdditionalFlags: []cli.Flag{
 			&cli.StringFlag{
 				Name: "test.testlogfile",

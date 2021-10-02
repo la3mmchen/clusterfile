@@ -4,13 +4,15 @@ clusters:
   - name: unit-tests
     context: kind-kind
     envs:
+      - name: addons
+        location: git@github.com:githubtraining/hellogitworld.git
       - name: web-apps
         location: helmfile/web-apps.yaml
   - name: dev
     context: kubernetes
     envs:
-      #- name: addons
-      #  location: helmfile/addons.yaml
+      - name: addons
+        location: git@github.com:githubtraining/hellogitworld.git
       - name: web-apps
         location: helmfile/web-apps.yaml
   - name: test
