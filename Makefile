@@ -54,7 +54,7 @@ unit-tests:
 
 .PHONY: app-tests
 app-tests:
-	@go test -cover -failfast -short "."
+	@go test -cover -parallel 1 -failfast -short "."
 	@echo "\n____________________________"
 
 .PHONY: add-to-path

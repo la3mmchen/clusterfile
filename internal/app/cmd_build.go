@@ -45,7 +45,7 @@ func Build(cfg *types.Configuration) *cli.Command {
 
 		for i := range cfg.ActiveCluster.Envs {
 
-			stdout, stderr, err := RunWithOutput(cfg.HelmfileExecutable, []string{"--file", cfg.ActiveCluster.Envs[i].Location, "--file", "helmfile/web-apps.yaml", "build"})
+			stdout, stderr, err := RunWithOutput(cfg.HelmfileExecutable, []string{"--file", cfg.ActiveCluster.Envs[i].Location, "build"})
 			if err != nil {
 				return err
 			}
