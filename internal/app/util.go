@@ -44,9 +44,11 @@ func PreloadCfg(cfg *types.Configuration) error {
 		return err
 	}
 
-	err = checkKubeConfig(cfg)
-	if err != nil {
-		return fmt.Errorf("can't connect to kubernetes cluster [%s]", cfg.ActiveContext)
+	if !cfg.Offline {
+		err = checkKubeConfig(cfg)
+		if err != nil {
+			return fmt.Errorf("can't connect to kubernetes cluster [%s]", cfg.ActiveContext)
+		}
 	}
 
 	// parse clusterfile

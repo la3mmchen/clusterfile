@@ -47,6 +47,13 @@ func CreateApp(cfg *types.Configuration) *cli.App {
 			DefaultText: "default: false, if true ignore missing helmfile.",
 			Usage:       "Ignore missing env specific helmfile.",
 		},
+		&cli.BoolFlag{
+			Name:        "offline",
+			Value:       false,
+			Destination: &cfg.Offline,
+			DefaultText: "default: false, if true do not connect to any k8s cluster.",
+			Usage:       "Work offline. Not all subcommands will work with this flag.",
+		},
 	}
 
 	cliFlags = append(cliFlags, cfg.AdditionalFlags...)

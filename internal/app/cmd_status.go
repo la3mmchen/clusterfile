@@ -12,15 +12,6 @@ func Status(cfg *types.Configuration) *cli.Command {
 		Name:  "status",
 		Usage: "check the status of the defined envs for the loaded context.",
 	}
-	cmd.Flags = []cli.Flag{
-		&cli.BoolFlag{
-			Name:        "offline",
-			Value:       false,
-			Destination: &cfg.StatusConfig.Offline,
-			DefaultText: "default: false, set to true to skip the env check against kubernetes cluster",
-			Usage:       "skip check against kubernetes cluster",
-		},
-	}
 
 	cmd.Action = func(c *cli.Context) error {
 
@@ -35,7 +26,7 @@ func Status(cfg *types.Configuration) *cli.Command {
 
 			for i := range cfg.ActiveCluster.Envs {
 				envs[cfg.ActiveCluster.Envs[i].Name] = "state not identified."
-				if !cfg.StatusConfig.Offline {
+				if !cfg.Offline {
 					rc, err := DiffEnv(cfg, cfg.ActiveCluster.Envs[i].Location)
 					if err != nil {
 						return err

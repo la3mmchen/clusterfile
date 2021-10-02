@@ -105,6 +105,7 @@ func getTestCfg() types.Configuration {
 		AppUsage:            "Control the content of multiple k8s cluster via helmfile.",
 		EnvSelection:        "",
 		SkipFlagParsing:     true,
+		Offline:             true,
 		ClusterfileLocation: createTestFiles(),
 		AdditionalFlags: []cli.Flag{
 			&cli.StringFlag{

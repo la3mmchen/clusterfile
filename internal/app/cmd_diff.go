@@ -15,6 +15,10 @@ func Diff(cfg *types.Configuration) *cli.Command {
 
 	cmd.Action = func(c *cli.Context) error {
 
+		if cfg.Offline {
+			fmt.Println("\nDiff of environments does not work offline.")
+			return nil
+		}
 		err := PreloadCfg(cfg)
 		if err != nil {
 			return err

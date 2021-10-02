@@ -14,21 +14,11 @@ func Preflight(cfg *types.Configuration) *cli.Command {
 		Usage: "Execute prefligth checks to assert that the app works in your environment.",
 	}
 
-	cmd.Flags = []cli.Flag{
-		&cli.BoolFlag{
-			Name:        "offline",
-			Value:       false,
-			Destination: &cfg.PreflightConfig.Offline,
-			DefaultText: "default: false, do connect to configured kubernetes cluster",
-			Usage:       "skip kubernetes connect",
-		},
-	}
-
 	cmd.Action = func(c *cli.Context) error {
 		var prefixText = "Preflight check: "
 
 		// check kubeconfig
-		if !cfg.PreflightConfig.Offline {
+		if !cfg.Offline {
 			fmt.Printf("%schecking kubernetes config and connect to cluster. \n", prefixText)
 			err := checkKubeConfig(cfg)
 			if err != nil {

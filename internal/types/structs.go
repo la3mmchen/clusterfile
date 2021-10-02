@@ -17,12 +17,11 @@ type Configuration struct {
 	OverwrittenKubeContext string
 	OutputDir              string
 	SkipFlagParsing        bool
+	Offline                bool
 
 	// link to other structs that contains input settings
-	PreflightConfig Preflight
-	TemplateConfig  Template
-	BuildConfig     Build
-	StatusConfig    Status
+	TemplateConfig Template
+	BuildConfig    Build
 
 	// parsed content
 	Clusterfile   Clusterfile
@@ -31,11 +30,6 @@ type Configuration struct {
 
 	// mixed stuff
 	AdditionalFlags []cli.Flag
-}
-
-// Status represents options for the cli subcommand
-type Status struct {
-	Offline bool
 }
 
 // Build represents options for the cli subcommand
@@ -47,11 +41,6 @@ type Build struct {
 // Template represents options for the cli subcommand
 type Template struct {
 	Stdout bool
-}
-
-// Preflight represents options for the cli subcommand
-type Preflight struct {
-	Offline bool
 }
 
 // Clusterfile contains the parsed clusterfile
