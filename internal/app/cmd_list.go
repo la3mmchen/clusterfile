@@ -20,10 +20,13 @@ func List(cfg *types.Configuration) *cli.Command {
 			return err
 		}
 
-		fmt.Println("\nDedicated releases: ")
-		for i := range cfg.ActiveCluster.Releases {
-			fmt.Printf("%s (%s)", cfg.ActiveCluster.Releases[i].Name, cfg.ActiveCluster.Releases[i].Version)
+		if len(cfg.ActiveCluster.Releases) > 0 {
+			fmt.Println("\nDedicated releases: ")
+			for i := range cfg.ActiveCluster.Releases {
+				fmt.Printf("%s (%s)", cfg.ActiveCluster.Releases[i].Name, cfg.ActiveCluster.Releases[i].Version)
+			}
 		}
+
 		fmt.Println("\nReleases via Environments: ")
 		for i := range cfg.ActiveCluster.Envs {
 			stdout, _, err := RunWithOutput(cfg.HelmfileExecutable, []string{"--file", cfg.ActiveCluster.Envs[i].Location, "list"})

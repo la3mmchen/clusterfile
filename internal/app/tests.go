@@ -41,6 +41,9 @@ clusters:
         location: addons.yaml
   - name: unit-tests-local
     context: kubernetes
+    releases:
+      - name: nginx
+        version: 8.9.1
     envs:
       - name: web-apps
         location: addons.yaml
