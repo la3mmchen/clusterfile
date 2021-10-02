@@ -63,12 +63,19 @@ type Clusterfile struct {
 
 // Cluster contains the part of clusterfile that describes the cluster
 type Cluster struct {
-	Context string
-	Envs    []Env `yaml:"envs"`
+	Context  string
+	Releases []Release `yaml:"releases"`
+	Envs     []Env     `yaml:"envs"`
 }
 
 // Env contains the part of clusterfile that describes the env
 type Env struct {
 	Name     string
 	Location string
+}
+
+// Release contains the part of clusterfile that describes releases
+type Release struct {
+	Name    string
+	Version string
 }
