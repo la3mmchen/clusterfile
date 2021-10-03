@@ -3,11 +3,17 @@ version: 1
 clusters:
   - name: unit-tests
     context: kind-kind
+    releases:
+      - name: nginx
+        version: 8.9.1
     envs:
       - name: web-apps
         location: helmfile/web-apps.yaml
   - name: dev
     context: kubernetes
+    releases:
+      - name: nginx
+        version: 8.9.1
     envs:
       #- name: addons
       #  location: helmfile/addons.yaml

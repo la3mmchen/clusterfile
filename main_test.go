@@ -45,29 +45,30 @@ func TestAppRun(t *testing.T) {
 
 func TestSubcmds(t *testing.T) {
 	cases := map[string][]string{
-		"build":             {"build"},
-		"dump":              {"dump"},
-		"list":              {"list"},
-		"list-with-env":     {"--env=addons", "list"},
-		"lint":              {"lint"},
+		"build":         {"build"},
+		"dump":          {"--offline", "dump"},
+		"list":          {"list"},
+		"list-with-env": {"--env=addons", "list"},
+		//"lint":              {"lint"},
 		"preflight":         {"preflight"},
-		"preflight-offline": {"preflight", "--offline"},
+		"preflight-offline": {"--offline", "preflight"},
 		"status":            {"status"},
-		"status-offline":    {"status", "--offline"},
-		"test":              {"test"},
+		"status-offline":    {"--offline", "status"},
 	}
 
 	args := os.Args[0:1]
+	// create a new test app
+	app := app.BootstrapTestApp()
 	for testcase, subcmds := range cases {
+		argsCpy := args
 		fmt.Printf("__Test: [%v] \n", testcase)
-		// create a new test app
-		app := app.BootstrapTestApp()
+		fmt.Printf("__Args: [%v] \n", args)
 
 		for i := range subcmds {
-			args = append(args, subcmds[i])
+			argsCpy = append(argsCpy, subcmds[i])
 		}
 
-		if err := app.Run(args); err != nil {
+		if err := app.Run(argsCpy); err != nil {
 			t.Logf("SubCmd [%v]: cli command [%v] failed. Error: %v", testcase, strings.Join(subcmds, ", "), err)
 			t.FailNow()
 		}

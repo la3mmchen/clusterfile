@@ -17,12 +17,11 @@ type Configuration struct {
 	OverwrittenKubeContext string
 	OutputDir              string
 	SkipFlagParsing        bool
+	Offline                bool
 
 	// link to other structs that contains input settings
-	PreflightConfig Preflight
-	TemplateConfig  Template
-	BuildConfig     Build
-	StatusConfig    Status
+	TemplateConfig Template
+	BuildConfig    Build
 
 	// parsed content
 	Clusterfile   Clusterfile
@@ -31,11 +30,6 @@ type Configuration struct {
 
 	// mixed stuff
 	AdditionalFlags []cli.Flag
-}
-
-// Status represents options for the cli subcommand
-type Status struct {
-	Offline bool
 }
 
 // Build represents options for the cli subcommand
@@ -49,11 +43,6 @@ type Template struct {
 	Stdout bool
 }
 
-// Preflight represents options for the cli subcommand
-type Preflight struct {
-	Offline bool
-}
-
 // Clusterfile contains the parsed clusterfile
 type Clusterfile struct {
 	Version  string    `yaml:"version"`
@@ -63,12 +52,19 @@ type Clusterfile struct {
 
 // Cluster contains the part of clusterfile that describes the cluster
 type Cluster struct {
-	Context string
-	Envs    []Env `yaml:"envs"`
+	Context  string
+	Releases []Release `yaml:"releases,omitempty"`
+	Envs     []Env     `yaml:"envs"`
 }
 
 // Env contains the part of clusterfile that describes the env
 type Env struct {
 	Name     string
 	Location string
+}
+
+// Release contains the part of clusterfile that describes releases
+type Release struct {
+	Name    string
+	Version string
 }

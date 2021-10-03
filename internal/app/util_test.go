@@ -14,7 +14,7 @@ func TestPreloadCfg(t *testing.T) {
 	cfg := getTestCfg()
 
 	// only test offline stuff
-	cfg.PreflightConfig.Offline = true
+	cfg.Offline = true
 
 	if err := PreloadCfg(&cfg); err != nil {
 		t.Log(err)

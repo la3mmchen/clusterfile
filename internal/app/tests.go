@@ -12,6 +12,7 @@ import (
 func BootstrapTestApp() *cli.App {
 	// construct an app for testing purposes
 	cfg := getTestCfg()
+
 	return CreateApp(&cfg)
 }
 
@@ -36,13 +37,19 @@ version: 1
 clusters:
   - name: unit-tests-ci
     context: kind-kind
+    releases:
+      - name: nginx
+        version: 8.9.1
     envs:
-      - name: web-apps
+      - name: addons
         location: addons.yaml
   - name: unit-tests-local
     context: kubernetes
+    releases:
+      - name: nginx
+        version: 8.9.1
     envs:
-      - name: web-apps
+      - name: addons
         location: addons.yaml
   - name: empty-cluster
     context: kind-kind-empty
@@ -66,16 +73,18 @@ clusters:
 	// then: create a test helmfile
 	helmfile := `
 ---
-version: 1
-clusters:
-  - name: unit-tests
-    context: kind-kind
-    envs:
-      - name: addons
-        location: addons.yaml
-  - name: empty-cluster
-    context: kind-kind-empty
-    envs: []
+helmDefaults:
+  skipDeps: false
+commonLabels:
+  createdBy: clusterfilectl
+repositories: []
+
+releases:
+  - name: nginx
+    namespace: nginx
+    createNamespace: true
+    chart: bitnami/nginx
+    version: 8.9.1
 `
 
 	testfile := path.Join(tempDir, "addons.yaml")
@@ -102,6 +111,7 @@ func getTestCfg() types.Configuration {
 		AppUsage:            "Control the content of multiple k8s cluster via helmfile.",
 		EnvSelection:        "",
 		SkipFlagParsing:     true,
+		Offline:             true,
 		ClusterfileLocation: createTestFiles(),
 		AdditionalFlags: []cli.Flag{
 			&cli.StringFlag{

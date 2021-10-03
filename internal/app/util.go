@@ -40,13 +40,15 @@ func PreloadCfg(cfg *types.Configuration) error {
 	}
 
 	if err != nil {
-		fmt.Printf("Error loading kube context: [%v] \n", err)
-		return err
+		fmt.Printf("You do not have a kube context. [%v] \n", err)
+		return nil
 	}
 
-	err = checkKubeConfig(cfg)
-	if err != nil {
-		return fmt.Errorf("can't connect to kubernetes cluster [%s]", cfg.ActiveContext)
+	if !cfg.Offline {
+		err = checkKubeConfig(cfg)
+		if err != nil {
+			return fmt.Errorf("can't connect to kubernetes cluster [%s]", cfg.ActiveContext)
+		}
 	}
 
 	// parse clusterfile
@@ -126,6 +128,7 @@ func SetActiveCluster(cfg *types.Configuration) bool {
 // - check the existence of the sub-helmfiles that are configured for the active cluster
 // - drop envs that aren't selected
 func ValidateEnvHelmfile(cfg *types.Configuration) error {
+	fmt.Printf("ValidateEnvHelmfile: \n")
 	for i := range cfg.ActiveCluster.Envs {
 
 		// drop env if a specific env is selected via `--env`
