@@ -45,11 +45,11 @@ func TestAppRun(t *testing.T) {
 
 func TestSubcmds(t *testing.T) {
 	cases := map[string][]string{
-		"build":             {"build"},
-		"dump":              {"--offline", "dump"},
-		"list":              {"list"},
-		"list-with-env":     {"--env=addons", "list"},
-		"lint":              {"lint"},
+		"build":         {"build"},
+		"dump":          {"--offline", "dump"},
+		"list":          {"list"},
+		"list-with-env": {"--env=addons", "list"},
+		//"lint":              {"lint"},
 		"preflight":         {"preflight"},
 		"preflight-offline": {"--offline", "preflight"},
 		"status":            {"status"},
