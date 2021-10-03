@@ -59,16 +59,17 @@ func TestSubcmds(t *testing.T) {
 
 	args := os.Args[0:1]
 	for testcase, subcmds := range cases {
+		argsCpy := args
 		fmt.Printf("__Test: [%v] \n", testcase)
 		fmt.Printf("__Args: [%v] \n", args)
 		// create a new test app
 		app := app.BootstrapTestApp()
 
 		for i := range subcmds {
-			args = append(args, subcmds[i])
+			argsCpy = append(argsCpy, subcmds[i])
 		}
 
-		if err := app.Run(args); err != nil {
+		if err := app.Run(argsCpy); err != nil {
 			t.Logf("SubCmd [%v]: cli command [%v] failed. Error: %v", testcase, strings.Join(subcmds, ", "), err)
 			t.FailNow()
 		}

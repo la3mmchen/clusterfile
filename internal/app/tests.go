@@ -12,6 +12,7 @@ import (
 func BootstrapTestApp() *cli.App {
 	// construct an app for testing purposes
 	cfg := getTestCfg()
+
 	return CreateApp(&cfg)
 }
 
@@ -69,16 +70,18 @@ clusters:
 	// then: create a test helmfile
 	helmfile := `
 ---
-version: 1
-clusters:
-  - name: unit-tests
-    context: kind-kind
-    envs:
-      - name: addons
-        location: addons.yaml
-  - name: empty-cluster
-    context: kind-kind-empty
-    envs: []
+helmDefaults:
+  skipDeps: false
+commonLabels:
+  createdBy: clusterfilectl
+repositories: []
+
+releases:
+  - name: nginx
+    namespace: nginx
+    createNamespace: true
+    chart: bitnami/nginx
+    version: 8.9.1
 `
 
 	testfile := path.Join(tempDir, "addons.yaml")
