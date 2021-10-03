@@ -57,12 +57,12 @@ func TestSubcmds(t *testing.T) {
 	}
 
 	args := os.Args[0:1]
+	// create a new test app
+	app := app.BootstrapTestApp()
 	for testcase, subcmds := range cases {
 		argsCpy := args
 		fmt.Printf("__Test: [%v] \n", testcase)
 		fmt.Printf("__Args: [%v] \n", args)
-		// create a new test app
-		app := app.BootstrapTestApp()
 
 		for i := range subcmds {
 			argsCpy = append(argsCpy, subcmds[i])
