@@ -37,8 +37,11 @@ version: 1
 clusters:
   - name: unit-tests-ci
     context: kind-kind
+    releases:
+      - name: nginx
+        version: 8.9.1
     envs:
-      - name: web-apps
+      - name: addons
         location: addons.yaml
   - name: unit-tests-local
     context: kubernetes
@@ -46,7 +49,7 @@ clusters:
       - name: nginx
         version: 8.9.1
     envs:
-      - name: web-apps
+      - name: addons
         location: addons.yaml
   - name: empty-cluster
     context: kind-kind-empty
