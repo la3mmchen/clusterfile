@@ -31,7 +31,7 @@ jobs:
           sudo wget https://github.com/roboll/helmfile/releases/download/$HELMFILE_VERSION/helmfile_linux_amd64
           sudo chmod +x helmfile_linux_amd64 && mv helmfile_linux_amd64 /usr/local/bin/helmfile
           helmfile --help
-          helm -help
+          helm version
           helm repo add bitnami https://charts.bitnami.com/bitnami
       - uses: actions/checkout@v1
       - uses: actions/setup-go@v2
