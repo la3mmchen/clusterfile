@@ -1,0 +1,13 @@
+---
+# Clusterfile is a declarative description of our clusters
+clusters:
+    "unit-tests": # kube-version=1.22
+      envs:
+        - addons
+      overwrites:
+        "addons-base": {}
+    "kubernetes": # kube-version=1.22
+      envs:
+        - addons
+      overwrites:
+        "addons": {}

@@ -9,6 +9,7 @@ type Configuration struct {
 	AppVersion             string
 	AppUsage               string
 	ClusterfileLocation    string
+	ClusterfileVersion     string
 	Debug                  string
 	EnvSelection           string
 	Ignore                 bool
@@ -24,9 +25,10 @@ type Configuration struct {
 	BuildConfig    Build
 
 	// parsed content
-	Clusterfile   Clusterfile
-	ActiveCluster Cluster
-	ActiveContext string
+	Clusterfile       Clusterfile
+	ClusterfileLegacy ClusterfileLegacy
+	ActiveCluster     Cluster
+	ActiveContext     string
 
 	// mixed stuff
 	AdditionalFlags []cli.Flag
@@ -41,30 +43,4 @@ type Build struct {
 // Template represents options for the cli subcommand
 type Template struct {
 	Stdout bool
-}
-
-// Clusterfile contains the parsed clusterfile
-type Clusterfile struct {
-	Version  string    `yaml:"version"`
-	Clusters []Cluster `yaml:"clusters"`
-	Location string    // this is a meta information where the clusterfile is stored
-}
-
-// Cluster contains the part of clusterfile that describes the cluster
-type Cluster struct {
-	Context  string
-	Releases []Release `yaml:"releases,omitempty"`
-	Envs     []Env     `yaml:"envs"`
-}
-
-// Env contains the part of clusterfile that describes the env
-type Env struct {
-	Name     string
-	Location string
-}
-
-// Release contains the part of clusterfile that describes releases
-type Release struct {
-	Name    string
-	Version string
 }

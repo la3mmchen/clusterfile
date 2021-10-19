@@ -29,7 +29,7 @@ func Preflight(cfg *types.Configuration) *cli.Command {
 
 		// parse clusterfile
 		fmt.Printf("%schecking %s.", prefixText, cfg.ClusterfileLocation)
-		_, err := ParseClusterfile(cfg)
+		err := ParseClusterfile(cfg)
 		if err != nil {
 			fmt.Printf("%v \n", err.Error())
 			return err
