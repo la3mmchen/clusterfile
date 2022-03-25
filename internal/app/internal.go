@@ -1,12 +1,14 @@
 package app
 
 import (
+	"bufio"
 	"context"
 	"encoding/json"
 	"flag"
 	"fmt"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 
 	"github.com/la3mmchen/clusterfile/internal/types"
@@ -15,6 +17,45 @@ import (
 	"k8s.io/client-go/tools/clientcmd"
 	"k8s.io/client-go/util/homedir"
 )
+
+func mapLegacyToCluster(name string, in types.ClusterLegacy) types.Cluster {
+	cluster := types.Cluster{
+		Context: name,
+	}
+	for i := range in.Envs {
+		tmp := types.Env{
+			Name:     in.Envs[i],
+			Location: "../envs/" + in.Envs[i] + ".yaml",
+		}
+		cluster.Envs = append(cluster.Envs, tmp)
+	}
+
+	return cluster
+}
+
+func hasVersion(clusterfile string) bool {
+
+	file, err := os.Open(clusterfile)
+	if err != nil {
+		return false
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	r, err := regexp.Compile("^version:")
+
+	if err != nil {
+		return false
+	}
+
+	for scanner.Scan() {
+		if r.MatchString(scanner.Text()) {
+			return true
+		}
+	}
+
+	return false
+}
 
 // checkKubeConfig uses the current kubernetes context to
 // test if the kubernetes cluster can be reached

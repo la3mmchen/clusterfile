@@ -12,13 +12,14 @@ default: build run tests
 #
 # *** build steps *** 
 # 
-.PHONY: build-executable
+.PHONY: build
 build: go-mod build-executable
 
 go-mod:
 	@go mod vendor
 	@go mod verify
 
+.PHONY: build-executable
 build-executable: 
 	@rm -f ${EXECUTABLE}
 	@go build -o ${EXECUTABLE} -ldflags "-X main.AppVersion=${GIT_COMMIT}" .

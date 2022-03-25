@@ -1,11 +1,15 @@
 # clusterfile
 
-describe contents of kubernetes clusters. and sync them afterwards with helmfile.
+describe contents of kubernetes clusters. and sync them afterwards with helm and helmfile.
 
 ```
+version: 1
 clusters:
   - name: dev
     context: kubernetes-dev
+    releases:
+      - name: nginx
+        version: 8.9.1
     envs:
       - name: web-apps
         location: helmfile/web-apps.yaml

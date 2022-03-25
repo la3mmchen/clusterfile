@@ -7,6 +7,7 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"strings"
 
 	"github.com/la3mmchen/clusterfile/internal/types"
 	"gopkg.in/yaml.v3"
@@ -52,7 +53,7 @@ func PreloadCfg(cfg *types.Configuration) error {
 	}
 
 	// parse clusterfile
-	cfg.Clusterfile, err = ParseClusterfile(cfg)
+	err = ParseClusterfile(cfg)
 	if err != nil {
 		return err
 	}
@@ -70,8 +71,9 @@ func PreloadCfg(cfg *types.Configuration) error {
 }
 
 // ParseCLusterfile returns the parsed contents of the clusterfile
-func ParseClusterfile(cfg *types.Configuration) (types.Clusterfile, error) {
+func ParseClusterfile(cfg *types.Configuration) error {
 	var tmpString string
+
 	// check if cfg.Clusterfile is an absolute path
 	fileinfo, err := os.Stat(cfg.ClusterfileLocation)
 
@@ -81,36 +83,65 @@ func ParseClusterfile(cfg *types.Configuration) (types.Clusterfile, error) {
 		tmpString = cfg.ClusterfileLocation
 	}
 
-	var clfl = types.Clusterfile{
-		Location: tmpString,
-	}
-
-	f, err := os.Open(clfl.Location)
+	f, err := os.Open(tmpString)
 
 	if err != nil {
-		return types.Clusterfile{}, err
+		return err
 	}
 	defer f.Close()
 
-	err = yaml.NewDecoder(f).Decode(&clfl)
-	if err != nil {
-		return types.Clusterfile{}, err
+	if hasVersion(tmpString) {
+
+		clfl := types.Clusterfile{
+			Location: tmpString,
+		}
+
+		// parse v1
+		err = yaml.NewDecoder(f).Decode(&clfl)
+		if err != nil {
+			return err
+		}
+		cfg.Clusterfile = clfl
+		cfg.ClusterfileVersion = clfl.Version
+
+	} else {
+		clfl := types.ClusterfileLegacy{
+			Location: tmpString,
+		}
+
+		// parse legacy version
+		err = yaml.NewDecoder(f).Decode(&clfl)
+		if err != nil {
+			return err
+		}
+
+		cfg.ClusterfileLegacy = clfl
+		cfg.ClusterfileVersion = "legacy"
 	}
 
-	return clfl, err
+	return err
 }
 
 // SetActiveCluster determines the current cluster
 // - copys the content to use  to a new position in config struct.
-// - resolve possible path isseu in the defined sub-helmfle
+// - resolve possible path issue in the defined sub-helmfle
 func SetActiveCluster(cfg *types.Configuration) bool {
 	var found = false
 
 	// set active cluster
-	for i := range cfg.Clusterfile.Clusters {
-		if cfg.Clusterfile.Clusters[i].Context == cfg.ActiveContext {
-			cfg.ActiveCluster = cfg.Clusterfile.Clusters[i]
-			found = true
+	if cfg.ClusterfileVersion != "legacy" {
+		for i := range cfg.Clusterfile.Clusters {
+			if cfg.Clusterfile.Clusters[i].Context == cfg.ActiveContext {
+				cfg.ActiveCluster = cfg.Clusterfile.Clusters[i]
+				found = true
+			}
+		}
+	} else {
+		for k, v := range cfg.ClusterfileLegacy.Clusters {
+			if strings.Contains(cfg.ActiveContext, k) {
+				cfg.ActiveCluster = mapLegacyToCluster(k, v)
+				found = true
+			}
 		}
 	}
 
@@ -128,7 +159,6 @@ func SetActiveCluster(cfg *types.Configuration) bool {
 // - check the existence of the sub-helmfiles that are configured for the active cluster
 // - drop envs that aren't selected
 func ValidateEnvHelmfile(cfg *types.Configuration) error {
-	fmt.Printf("ValidateEnvHelmfile: \n")
 	for i := range cfg.ActiveCluster.Envs {
 
 		// drop env if a specific env is selected via `--env`
