@@ -32,9 +32,9 @@ func Diff(cfg *types.Configuration) *cli.Command {
 				return err
 			}
 			if rc == 0 {
-				fmt.Printf("%v] state ok.", cfg.ActiveCluster.Envs[i].Name)
+				fmt.Printf("%v] state ok. \n", cfg.ActiveCluster.Envs[i].Name)
 			} else {
-				fmt.Printf("%v] state drifted. Sync needed.", cfg.ActiveCluster.Envs[i].Name)
+				fmt.Printf("%v] state drifted. Sync needed. \n", cfg.ActiveCluster.Envs[i].Name)
 			}
 
 		}

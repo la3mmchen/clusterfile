@@ -27,7 +27,7 @@ func List(cfg *types.Configuration) *cli.Command {
 			}
 		}
 
-		fmt.Println("\nReleases via Environments: ")
+		fmt.Println("\nList releases in environments: ")
 		for i := range cfg.ActiveCluster.Envs {
 			stdout, _, err := RunWithOutput(cfg.HelmfileExecutable, []string{"--file", cfg.ActiveCluster.Envs[i].Location, "list"})
 			if err != nil {

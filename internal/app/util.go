@@ -159,7 +159,6 @@ func SetActiveCluster(cfg *types.Configuration) bool {
 // - check the existence of the sub-helmfiles that are configured for the active cluster
 // - drop envs that aren't selected
 func ValidateEnvHelmfile(cfg *types.Configuration) error {
-	fmt.Printf("ValidateEnvHelmfile: \n")
 	for i := range cfg.ActiveCluster.Envs {
 
 		// drop env if a specific env is selected via `--env`
